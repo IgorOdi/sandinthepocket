@@ -5,9 +5,10 @@ namespace Sand.Combat.Weapons {
 	public abstract class BaseWeaponController : MonoBehaviour, IWeapon {
 
 		public WeaponData WeaponData;
-		protected float cooldownRunningTime;
-		protected bool attacking;
+		public bool IsAttacking { get; protected set; }
 		//public Controller Context {get; set;}
+
+		protected float cooldownRunningTime;
 
 		//TODO: Abstrair para IEquipment?
 		public virtual void OnEquip() { }
@@ -18,8 +19,8 @@ namespace Sand.Combat.Weapons {
 		public virtual void OnWeaponRelease() { }
 
 		protected virtual void Update() {
-			
-			if (cooldownRunningTime > 0 && !attacking) {
+
+			if (cooldownRunningTime > 0 && !IsAttacking) {
 				cooldownRunningTime -= Time.deltaTime;
 			}
 		}

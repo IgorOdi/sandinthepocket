@@ -7,7 +7,7 @@ namespace Sand.Combat {
 
 	public class Damager : MonoBehaviour {
 
-		public AttackData AttackData { get; private set; }
+		public AttackData AttackData { get; protected set; }
 
 		public Action OnHitUnleash { get; set; }
 		public Action OnHitDisable { get; set; }
@@ -24,9 +24,8 @@ namespace Sand.Combat {
 			collider = GetComponent<Collider> ();
 			collider.enabled = false;
 
-			this.RunDelayed (context.Delay, UnleashDamager);
-			this.RunDelayed (context.Delay + context.Duration, DisableDamager);
-			//TODO: Convert Destroy to Pool;
+			this.RunDelayed (context.TimingData.Delay, UnleashDamager);
+			this.RunDelayed (context.TimingData.Delay + context.TimingData.Duration, DisableDamager);
 		}
 
 		private void UnleashDamager() {
@@ -38,7 +37,8 @@ namespace Sand.Combat {
 		private void DisableDamager() {
 
 			collider.enabled = false;
-			DestroyImmediate (gameObject);
+			Destroy (gameObject);
+			//TODO: Convert Destroy to Pool;
 		}
 
 		private void OnTriggerEnter(Collider other) {
