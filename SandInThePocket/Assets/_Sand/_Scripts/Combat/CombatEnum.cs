@@ -12,7 +12,6 @@
 
 	public enum ECombatStatus {
 
-		None,
 		Stagger,
 		Stun,
 		Burn,
