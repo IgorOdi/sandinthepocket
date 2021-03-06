@@ -19,7 +19,7 @@ namespace Sand.Combat.Weapons {
 			damager.Initialize (NextAttack);
 			Debug.Log ($"Attacking with {WeaponData.Name}\nAttack Index: {comboIndex} | AttackDamage: {GetNextAttackDamage ()}");
 			this.RunDelayed (NextAttack.TimingData.TotalDuration, () => SetAttacking (false));
-			comboResetRunningTime = 2;
+			comboResetRunningTime = WeaponData.ComboResetTime;
 
 			IncreaseComboIndex ();
 		}
