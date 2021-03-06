@@ -16,17 +16,15 @@ MonoBehaviour:
   - DamageData:
       WeaponPercentage: 0.9
       RawDamage: 0
-      DamageType: 0
-      ChanceToEffect: 0
       StatusData:
-      - CombatStatus: 3
+      - CombatStatus: 2
         Chance: 1
         Duration: 2
     TimingData:
       Delay: 0
       Duration: 0.25
     ColliderBuildData:
-      ColliderBuildType: 1
+      ColliderBuildType: 0
       Radius: 0
       Size: {x: 2, y: 2, z: 2}
       Offset: {x: 0, y: 0, z: 1}
@@ -45,10 +43,8 @@ MonoBehaviour:
   - DamageData:
       WeaponPercentage: 1
       RawDamage: 0
-      DamageType: 0
-      ChanceToEffect: 0
       StatusData:
-      - CombatStatus: 3
+      - CombatStatus: 2
         Chance: 1
         Duration: 1
     TimingData:
@@ -74,10 +70,8 @@ MonoBehaviour:
   - DamageData:
       WeaponPercentage: 1.25
       RawDamage: 5
-      DamageType: 0
-      ChanceToEffect: 0
       StatusData:
-      - CombatStatus: 3
+      - CombatStatus: 2
         Chance: 1
         Duration: 3
     TimingData:

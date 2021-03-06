@@ -12,9 +12,6 @@ namespace Sand.Combat.Attacks {
 
 		public float WeaponPercentage = 1;
 		public int RawDamage;
-		public EDamageType DamageType;
-		[Tooltip ("Chance percentage to apply a status based on damage type"), Range (0f, 1f)]
-		public float ChanceToEffect;
 		public List<StatusData> StatusData;
 
 		public int GetFullDamage(int weaponDamage) {

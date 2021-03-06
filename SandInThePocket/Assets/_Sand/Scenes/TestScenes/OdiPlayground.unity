@@ -565,7 +565,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ActorStats:
-    Health: 0
+    Health: 60
   Statuses: []
 --- !u!54 &1181354254
 Rigidbody:

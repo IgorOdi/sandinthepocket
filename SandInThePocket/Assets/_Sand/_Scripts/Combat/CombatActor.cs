@@ -50,7 +50,7 @@ namespace Sand.Combat {
 			OnActorGlobalDeath?.Invoke ();
 			OnActorDeath?.Invoke ();
 
-			//TODO: Conver to pool;
+			//TODO: Convert to pool;
 			Destroy (gameObject);
 		}
 
@@ -103,9 +103,10 @@ namespace Sand.Combat {
 
 			ActorStats.Health -= attackData.GetFullDamage ();
 
+			float randomResult = UnityEngine.Random.Range (0f, 1f);
 			for (int i = 0; i < attackData.DamageData.StatusData.Count; i++) {
 
-				float randomResult = UnityEngine.Random.Range (0f, 1f);
+				randomResult = UnityEngine.Random.Range (0f, 1f);
 				if (randomResult > attackData.DamageData.StatusData[i].Chance)
 					continue;
 
