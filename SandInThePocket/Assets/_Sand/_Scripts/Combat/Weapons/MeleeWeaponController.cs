@@ -9,34 +9,17 @@ namespace Sand.Combat.Weapons {
 		public AttackData NextAttack { get { return WeaponData.Combo.GetAttack (comboIndex); } }
 		protected int comboIndex;
 
-		protected override void Update() {
-
-			base.Update ();
-			if (Input.GetKeyDown (KeyCode.Space) && cooldownRunningTime <= 0) OnWeaponPress ();
-		}
-
 		public override void OnWeaponPress() {
 
 			cooldownRunningTime = WeaponData.Cooldown;
-			attacking = true;
+			SetAttacking (true);
 
 			var damager = SpawnHitArea ();
 			damager.Initialize (NextAttack);
 			Debug.Log ($"Attacking with {WeaponData.Name}\nAttack Index: {comboIndex}\nAttackDamage: {GetNextAttackDamage ()}");
-			this.RunDelayed (NextAttack.Delay + NextAttack.Duration, () => attacking = false);
+			this.RunDelayed (NextAttack.TimingData.Delay + NextAttack.TimingData.Duration, () => SetAttacking (false));
 
 			IncreaseComboIndex ();
-		}
-
-		public int GetNextAttackDamage() {
-
-			return GetAttackDamage (comboIndex);
-		}
-
-		public int GetAttackDamage(int index) {
-
-			var attack = WeaponData.Combo.GetAttack (index);
-			return Mathf.RoundToInt ((float) WeaponData.BaseDamage * attack.WeaponDamageMultiplier + attack.ExtraDamage);
 		}
 
 		protected void IncreaseComboIndex() {
@@ -48,7 +31,20 @@ namespace Sand.Combat.Weapons {
 			}
 		}
 
-		//TODO: Overwrite by a pool
+		protected void SetAttacking(bool attacking) => IsAttacking = attacking;
+		protected DamageData GetDamageSet(int index) => WeaponData.Combo.GetAttack (index).DamageData;
+		protected DamageData GetNextDamageSet() => GetDamageSet (comboIndex);
+
+		protected int GetAttackDamage(int index) => GetDamageSet (index).GetFullDamage (WeaponData.BaseDamage);
+		protected int GetNextAttackDamage() => GetAttackDamage (comboIndex);
+
+		protected override void Update() {
+
+			base.Update ();
+			if (Input.GetKeyDown (KeyCode.Space) && cooldownRunningTime <= 0) OnWeaponPress ();
+		}
+
+		//TODO: Convert to pool
 		private Damager SpawnHitArea() {
 
 			GameObject hitArea = new GameObject ($"{WeaponData.Name} Hit Area {comboIndex}");
