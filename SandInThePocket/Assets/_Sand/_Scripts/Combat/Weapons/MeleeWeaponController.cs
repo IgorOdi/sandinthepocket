@@ -12,12 +12,14 @@ namespace Sand.Combat.Weapons {
 		public override void OnWeaponPress() {
 
 			cooldownRunningTime = WeaponData.Cooldown;
+			NextAttack.Context = WeaponData;
 			SetAttacking (true);
 
 			var damager = SpawnHitArea ();
 			damager.Initialize (NextAttack);
-			Debug.Log ($"Attacking with {WeaponData.Name}\nAttack Index: {comboIndex}\nAttackDamage: {GetNextAttackDamage ()}");
-			this.RunDelayed (NextAttack.TimingData.Delay + NextAttack.TimingData.Duration, () => SetAttacking (false));
+			Debug.Log ($"Attacking with {WeaponData.Name}\nAttack Index: {comboIndex} | AttackDamage: {GetNextAttackDamage ()}");
+			this.RunDelayed (NextAttack.TimingData.TotalDuration, () => SetAttacking (false));
+			comboResetRunningTime = 2;
 
 			IncreaseComboIndex ();
 		}
@@ -41,14 +43,17 @@ namespace Sand.Combat.Weapons {
 		protected override void Update() {
 
 			base.Update ();
-			if (Input.GetKeyDown (KeyCode.Space) && cooldownRunningTime <= 0) OnWeaponPress ();
+			if (Input.GetKeyDown (KeyCode.Z) && cooldownRunningTime <= 0) OnWeaponPress ();
+			if (comboResetRunningTime <= 0) comboIndex = 0;
 		}
 
-		//TODO: Convert to pool
 		private Damager SpawnHitArea() {
 
+			//TODO: Convert to pool;
 			GameObject hitArea = new GameObject ($"{WeaponData.Name} Hit Area {comboIndex}");
-			hitArea.transform.position = transform.position;
+			hitArea.transform.parent = transform;
+			hitArea.transform.localPosition = Vector3.zero;
+			hitArea.transform.localEulerAngles = Vector3.zero;
 
 			if (NextAttack.ColliderBuildData.ColliderBuildType == EColliderBuildType.Box) {
 				var boxCollider = hitArea.AddComponent<BoxCollider> ();

@@ -9,8 +9,10 @@ namespace Sand.Combat.Weapons {
 		//public Controller Context {get; set;}
 
 		protected float cooldownRunningTime;
+		protected float comboResetRunningTime;
 
 		//TODO: Abstrair para IEquipment?
+		//Será que isso vai ser útil mesmo?
 		public virtual void OnEquip() { }
 		public virtual void OnUnequip() { }
 
@@ -22,6 +24,10 @@ namespace Sand.Combat.Weapons {
 
 			if (cooldownRunningTime > 0 && !IsAttacking) {
 				cooldownRunningTime -= Time.deltaTime;
+			}
+
+			if (comboResetRunningTime > 0 && !IsAttacking) {
+				comboResetRunningTime -= Time.deltaTime;
 			}
 		}
 	}
