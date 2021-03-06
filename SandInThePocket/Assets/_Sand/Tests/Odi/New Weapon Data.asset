@@ -14,6 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: Master Sword
   BaseDamage: 10
-  Cooldown: 1
-  DamageType: 0
+  Cooldown: 0.25
+  ComboResetTime: 2
+  DamageType: 1
+  ChanceToEffect: 0
   Combo: {fileID: 11400000, guid: 361718dee031f00448e4bdb3cba0e01d, type: 2}

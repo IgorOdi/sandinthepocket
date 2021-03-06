@@ -14,16 +14,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Attacks:
   - DamageData:
-      WeaponPercentage: 1
+      WeaponPercentage: 0.9
       RawDamage: 0
       DamageType: 0
       ChanceToEffect: 0
-      StatusData: []
+      StatusData:
+      - CombatStatus: 3
+        Chance: 1
+        Duration: 2
     TimingData:
       Delay: 0
-      Duration: 0
+      Duration: 0.25
     ColliderBuildData:
-      ColliderBuildType: 0
+      ColliderBuildType: 1
       Radius: 0
       Size: {x: 2, y: 2, z: 2}
       Offset: {x: 0, y: 0, z: 1}
@@ -44,10 +47,13 @@ MonoBehaviour:
       RawDamage: 0
       DamageType: 0
       ChanceToEffect: 0
-      StatusData: []
+      StatusData:
+      - CombatStatus: 3
+        Chance: 1
+        Duration: 1
     TimingData:
       Delay: 0
-      Duration: 0
+      Duration: 0.3
     ColliderBuildData:
       ColliderBuildType: 0
       Radius: 0
@@ -66,14 +72,17 @@ MonoBehaviour:
         m_PostInfinity: 2
         m_RotationOrder: 4
   - DamageData:
-      WeaponPercentage: 1
-      RawDamage: 0
+      WeaponPercentage: 1.25
+      RawDamage: 5
       DamageType: 0
       ChanceToEffect: 0
-      StatusData: []
+      StatusData:
+      - CombatStatus: 3
+        Chance: 1
+        Duration: 3
     TimingData:
-      Delay: 0
-      Duration: 0
+      Delay: 0.25
+      Duration: 0.5
     ColliderBuildData:
       ColliderBuildType: 1
       Radius: 4
