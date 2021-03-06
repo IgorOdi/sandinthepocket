@@ -9,11 +9,10 @@ namespace Sand.Combat {
 
 		public AttackData AttackData { get; protected set; }
 
-		public Action OnHitUnleash { get; set; }
+		public Action OnHitEnable { get; set; }
 		public Action OnHitDisable { get; set; }
-		public Action OnHitSuccess { get; set; }
-		public Action OnHitFail { get; set; }
-		public Action OnHitKill { get; set; }
+		public Action<bool> OnHitSuccess { get; set; }
+		public Action<bool> OnHitKill { get; set; }
 
 		private new Collider collider;
 		private IDamageable lastHitEnemy;
@@ -24,19 +23,24 @@ namespace Sand.Combat {
 			collider = GetComponent<Collider> ();
 			collider.enabled = false;
 
-			this.RunDelayed (context.TimingData.Delay, UnleashDamager);
+			this.RunDelayed (context.TimingData.Delay, EnableDamager);
 			this.RunDelayed (context.TimingData.Delay + context.TimingData.Duration, DisableDamager);
 		}
 
-		private void UnleashDamager() {
+		private void EnableDamager() {
 
+			lastHitEnemy = null;
 			collider.enabled = true;
-			OnHitUnleash?.Invoke ();
+			OnHitEnable?.Invoke ();
 		}
 
 		private void DisableDamager() {
 
 			collider.enabled = false;
+			OnHitDisable?.Invoke ();
+
+			if (lastHitEnemy == null) OnHitSuccess?.Invoke (false);
+
 			Destroy (gameObject);
 			//TODO: Convert Destroy to Pool;
 		}
@@ -45,14 +49,10 @@ namespace Sand.Combat {
 
 			if (other.gameObject.TryGetComponent<IDamageable> (out lastHitEnemy)) {
 
-				lastHitEnemy.CauseDamage (AttackData, (sucess) => {
-
-					if (sucess) OnHitSuccess?.Invoke ();
-					else OnHitFail?.Invoke ();
-				}, (killed) => {
-
-					if (killed) OnHitKill?.Invoke ();
-				});
+				lastHitEnemy.CauseDamage (AttackData,
+					(sucess) => OnHitSuccess?.Invoke (sucess),
+					(killed) => OnHitKill?.Invoke (killed)
+				);
 			}
 		}
 	}

@@ -26,6 +26,7 @@ namespace Sand.Combat.Attacks {
 
 		public ECombatStatus CombatStatus;
 		public float Chance;
+		public float Duration;
 	}
 
 	[System.Serializable]
@@ -43,6 +44,7 @@ namespace Sand.Combat.Attacks {
 
 		public float Delay;
 		public float Duration;
+		public float TotalDuration => Delay + Duration;
 	}
 
 	[System.Serializable]
@@ -68,13 +70,13 @@ namespace Sand.Combat.Attacks {
 		public DamageData DamageData;
 		public TimingData TimingData;
 		public ColliderBuildData ColliderBuildData;
-		[Tooltip ("No fully tmplemented")]
+		[Tooltip ("No tmplemented")]
 		public ImpactData ImpactData;
-		[Tooltip ("No fully tmplemented")]
+		[Tooltip ("No tmplemented")]
 		public ScreenShakeData ScreenShakeData;
 
 		public WeaponData Context { get; set; }
 
-		public int GetFullDamage(int weaponDamage) => DamageData.GetFullDamage (weaponDamage);
+		public int GetFullDamage() => DamageData.GetFullDamage (Context == null ? 0 : Context.BaseDamage);
 	}
 }
