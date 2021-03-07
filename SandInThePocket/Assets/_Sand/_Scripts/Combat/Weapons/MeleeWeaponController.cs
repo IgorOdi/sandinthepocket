@@ -6,20 +6,21 @@ namespace Sand.Combat.Weapons {
 
 	public class MeleeWeaponController : BaseWeaponController {
 
-		public AttackData NextAttack { get { return WeaponData.Combo.GetAttack (comboIndex); } }
+		protected AttackData NextAttack { get { return WeaponData.Combo.GetAttack (comboIndex); } }
 		protected int comboIndex;
 
-		public override void OnWeaponPress() {
+		protected override void OnWeaponPress() {
 
-			cooldownRunningTime = WeaponData.Cooldown;
-			NextAttack.Context = WeaponData;
 			SetAttacking (true);
+			cooldownRunningTime = WeaponData.Cooldown;
+			comboResetRunningTime = WeaponData.ComboResetTime;
+
+			NextAttack.Context = this;
+			Debug.Log ($"Attacking with {WeaponData.Name}\nAttack Index: {comboIndex} | AttackDamage: {GetNextAttackDamage ()}");
+			this.RunDelayed (NextAttack.TimingData.TotalDuration, () => SetAttacking (false));
 
 			var damager = SpawnHitArea ();
 			damager.Initialize (NextAttack);
-			Debug.Log ($"Attacking with {WeaponData.Name}\nAttack Index: {comboIndex} | AttackDamage: {GetNextAttackDamage ()}");
-			this.RunDelayed (NextAttack.TimingData.TotalDuration, () => SetAttacking (false));
-			comboResetRunningTime = WeaponData.ComboResetTime;
 
 			IncreaseComboIndex ();
 		}

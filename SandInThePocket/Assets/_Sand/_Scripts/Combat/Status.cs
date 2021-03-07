@@ -9,6 +9,7 @@ namespace Sand.Combat {
 		public ECombatStatus Type;
 		public float TotalDuration;
         public float CurrentDuration;
+		public int DamagePerSecond;
 
 		public Status(ECombatStatus type, float duration) {
 

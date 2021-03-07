@@ -2,23 +2,29 @@
 
 namespace Sand.Combat.Weapons {
 
-	public abstract class BaseWeaponController : MonoBehaviour, IWeapon {
+	[RequireComponent (typeof (CombatActor))]
+	public abstract class BaseWeaponController : MonoBehaviour {
 
 		public WeaponData WeaponData;
+		public CombatActor Context { get; set; }
 		public bool IsAttacking { get; protected set; }
-		//public Controller Context {get; set;}
 
 		protected float cooldownRunningTime;
 		protected float comboResetRunningTime;
 
-		//TODO: Abstrair para IEquipment?
+		//TODO: Abstrair?
 		//Será que isso vai ser útil mesmo?
-		public virtual void OnEquip() { }
-		public virtual void OnUnequip() { }
+		protected virtual void OnEquip() { }
+		protected virtual void OnUnequip() { }
+		protected virtual void OnWeaponPress() { }
+		protected virtual void OnWeaponHold() { }
+		protected virtual void OnWeaponRelease() { }
 
-		public virtual void OnWeaponHold() { }
-		public virtual void OnWeaponPress() { }
-		public virtual void OnWeaponRelease() { }
+		void OnEnable() => Initialize ();
+		protected virtual void Initialize() {
+
+			Context = GetComponent<CombatActor> ();
+		}
 
 		protected virtual void Update() {
 

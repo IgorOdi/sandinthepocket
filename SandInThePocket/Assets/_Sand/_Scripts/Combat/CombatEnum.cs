@@ -15,4 +15,11 @@
 		Box,
 		Sphere,
 	}
+
+	public enum EAttackResult {
+
+		Success,
+		Miss,
+		Blocked
+	}
 }

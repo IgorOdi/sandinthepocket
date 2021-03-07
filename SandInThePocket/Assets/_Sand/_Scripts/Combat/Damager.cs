@@ -11,8 +11,8 @@ namespace Sand.Combat {
 
 		public Action OnHitEnable { get; set; }
 		public Action OnHitDisable { get; set; }
-		public Action<bool> OnHitSuccess { get; set; }
-		public Action<bool> OnHitKill { get; set; }
+		public Action<EAttackResult, CombatActor> OnHitSuccess { get; set; }
+		public Action<bool, CombatActor> OnHitKill { get; set; }
 
 		private new Collider collider;
 		private IDamageable lastHitEnemy;
@@ -39,10 +39,10 @@ namespace Sand.Combat {
 			collider.enabled = false;
 			OnHitDisable?.Invoke ();
 
-			if (lastHitEnemy == null) OnHitSuccess?.Invoke (false);
+			if (lastHitEnemy == null) OnHitSuccess?.Invoke (EAttackResult.Miss, null);
 
-			Destroy (gameObject);
 			//TODO: Convert Destroy to Pool;
+			Destroy (gameObject);
 		}
 
 		private void OnTriggerEnter(Collider other) {
@@ -50,8 +50,8 @@ namespace Sand.Combat {
 			if (other.gameObject.TryGetComponent<IDamageable> (out lastHitEnemy)) {
 
 				lastHitEnemy.CauseDamage (AttackData,
-					(sucess) => OnHitSuccess?.Invoke (sucess),
-					(killed) => OnHitKill?.Invoke (killed)
+					(atkResult, actor) => OnHitSuccess?.Invoke (atkResult, actor),
+					(killed, actor) => OnHitKill?.Invoke (killed, actor)
 				);
 			}
 		}

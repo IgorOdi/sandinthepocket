@@ -11,47 +11,70 @@ namespace Sand.Combat {
 		public float Health;
 	}
 
+	[RequireComponent (typeof (Collider), typeof (Rigidbody))]
 	public class CombatActor : MonoBehaviour, IDamageable {
 
 		public ActorStats ActorStats;
 		public List<Status> Statuses;
 
-		public static event Action OnActorGlobalSpawn;
-		public static event Action OnActorGlobalHit;
-		public static event Action OnActorGlobalDeath;
+		public static event Action<CombatActor> OnActorGlobalSpawn;
+		public static event Action<CombatActor, EAttackResult> OnActorGlobalHit;
+		public static event Action<CombatActor> OnActorGlobalDeath;
 		public static event Action<Status> OnGlobalAddStatus;
 		public static event Action<Status> OnGlobalRemoveStatus;
 
-		public Action OnActorSpawn;
-		public Action OnActorHit;
-		public Action OnActorDeath;
+		public Action<CombatActor> OnActorSpawn;
+		public Action<CombatActor, EAttackResult> OnActorHit;
+		public Action<CombatActor> OnActorDeath;
 		public Action<Status> OnAddStatus;
 		public Action<Status> OnRemoveStatus;
 
 		void OnEnable() => OnSpawn ();
 		protected virtual void OnSpawn() {
 
-			OnActorGlobalSpawn?.Invoke ();
-			OnActorSpawn?.Invoke ();
+			OnActorGlobalSpawn?.Invoke (this);
+			OnActorSpawn?.Invoke (this);
 		}
 
-		protected virtual void OnHit() {
+		protected virtual void OnHit(AttackData attackData, EAttackResult attackResult) {
 
-			//TODO: Personal Hit Visual and Sound FX and Animation goes here;
-			Debug.Log ($"Hit on {gameObject.name}");
-			OnActorGlobalHit?.Invoke ();
-			OnActorHit?.Invoke ();
+			PlayHitFX ();
+			OnActorGlobalHit?.Invoke (this, attackResult);
+			OnActorHit?.Invoke (this, attackResult);
+			Debug.Log ($"Hit on {gameObject.name} from {attackData.User?.name}'s {attackData.Context.WeaponData.Name}");
 		}
 
-		protected virtual void OnDeath() {
+		protected virtual void OnDeath(AttackData attackData) {
 
-			//TODO: Personal Hit Visual and Sound FX and Animation goes here;
-			Debug.Log ($"Killed {gameObject.name}");
-			OnActorGlobalDeath?.Invoke ();
-			OnActorDeath?.Invoke ();
+			PlayDeathFX ();
+			OnActorGlobalDeath?.Invoke (this);
+			OnActorDeath?.Invoke (this);
+			Debug.Log ($"{gameObject.name} was killed by {attackData.User?.name}'s {attackData.Context.WeaponData.Name}");
 
 			//TODO: Convert to pool;
 			Destroy (gameObject);
+		}
+
+		protected virtual void PlayHitFX() {
+
+			//TODO: Personal Hit Visual and Sound FX and Animation goes here;
+		}
+		protected virtual void PlayDeathFX() {
+
+			//TODO: Personal Hit Visual and Sound FX and Animation goes here;
+		}
+
+		protected void AddStatus(List<StatusData> statuses) {
+
+			float randomResult = 0f;
+			for (int i = 0; i < statuses.Count; i++) {
+
+				randomResult = UnityEngine.Random.Range (0f, 1f);
+				if (randomResult > statuses[i].Chance)
+					continue;
+
+				AddStatus (new Status (statuses[i]));
+			}
 		}
 
 		protected void AddStatus(Status status) {
@@ -99,28 +122,18 @@ namespace Sand.Combat {
 			}
 		}
 
-		public void CauseDamage(AttackData attackData, Action<bool> success, Action<bool> killed) {
+		public void CauseDamage(AttackData attackData, Action<EAttackResult, CombatActor> atkResult, Action<bool, CombatActor> killed) {
 
 			ActorStats.Health -= attackData.GetFullDamage ();
+			atkResult?.Invoke (EAttackResult.Success, this);
+			OnHit (attackData, EAttackResult.Success);
 
-			float randomResult = UnityEngine.Random.Range (0f, 1f);
-			for (int i = 0; i < attackData.DamageData.StatusData.Count; i++) {
+			AddStatus (attackData.DamageData.StatusData);
 
-				randomResult = UnityEngine.Random.Range (0f, 1f);
-				if (randomResult > attackData.DamageData.StatusData[i].Chance)
-					continue;
-
-				AddStatus (new Status (attackData.DamageData.StatusData[i]));
-			}
-
-			bool hitSuccess = true;
 			bool killSucess = ActorStats.Health <= 0;
 
-			success?.Invoke (hitSuccess);
-			killed?.Invoke (killSucess);
-
-			if (hitSuccess) OnHit ();
-			if (killSucess) OnDeath ();
+			killed?.Invoke (killSucess, this);
+			if (killSucess) OnDeath (attackData);
 		}
 	}
 }

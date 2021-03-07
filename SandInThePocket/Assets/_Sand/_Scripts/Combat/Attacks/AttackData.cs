@@ -82,16 +82,17 @@ namespace Sand.Combat.Attacks {
 		[Tooltip ("Not implemented")]
 		public ScreenShakeData ScreenShakeData;
 
-		public WeaponData Context { get; set; }
+		public BaseWeaponController Context { get; set; }
+		public CombatActor User { get { return Context.Context; } }
 
 #if UNITY_EDITOR
 		[Button ("Copy")]
 		public void Test() {
-			Debug.Log ("Not impleted");
+			Debug.Log ("Not implemented");
 		}
 #endif
 
-		public int GetFullDamage() => DamageData.GetFullDamage (Context == null ? 0 : Context.BaseDamage);
+		public int GetFullDamage() => DamageData.GetFullDamage (Context == null ? 0 : Context.WeaponData.BaseDamage);
 
 	}
 }
