@@ -20,7 +20,7 @@ namespace Sand.Combat.Weapons {
 			this.RunDelayed (NextAttack.TimingData.TotalDuration, () => SetAttacking (false));
 
 			var damager = SpawnHitArea ();
-			damager.Initialize (NextAttack);
+			damager.Configure (NextAttack);
 
 			IncreaseComboIndex ();
 		}
@@ -55,18 +55,6 @@ namespace Sand.Combat.Weapons {
 			hitArea.transform.parent = transform;
 			hitArea.transform.localPosition = Vector3.zero;
 			hitArea.transform.localEulerAngles = Vector3.zero;
-
-			if (NextAttack.ColliderBuildData.ColliderBuildType == EColliderBuildType.Box) {
-				var boxCollider = hitArea.AddComponent<BoxCollider> ();
-				boxCollider.size = NextAttack.ColliderBuildData.Size;
-				boxCollider.center = NextAttack.ColliderBuildData.Offset;
-				boxCollider.isTrigger = true;
-			} else {
-				var sphereCollider = hitArea.AddComponent<SphereCollider> ();
-				sphereCollider.radius = NextAttack.ColliderBuildData.Radius;
-				sphereCollider.center = NextAttack.ColliderBuildData.Offset;
-				sphereCollider.isTrigger = true;
-			}
 
 			return hitArea.AddComponent<Damager> ();
 		}

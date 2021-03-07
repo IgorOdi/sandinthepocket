@@ -17,11 +17,10 @@ namespace Sand.Combat {
 		private new Collider collider;
 		private IDamageable lastHitEnemy;
 
-		public void Initialize(AttackData context) {
+		public void Configure(AttackData context) {
 
 			this.AttackData = context;
-			collider = GetComponent<Collider> ();
-			collider.enabled = false;
+			ConfigureFromData (context.ColliderBuildData);
 
 			this.RunDelayed (context.TimingData.Delay, EnableDamager);
 			this.RunDelayed (context.TimingData.Delay + context.TimingData.Duration, DisableDamager);
@@ -43,6 +42,24 @@ namespace Sand.Combat {
 
 			//TODO: Convert Destroy to Pool;
 			Destroy (gameObject);
+		}
+
+		private void ConfigureFromData(ColliderBuildData buildData) {
+
+			if (buildData.ColliderBuildType == EColliderBuildType.Box) {
+				var boxCollider = gameObject.AddComponent<BoxCollider> ();
+				boxCollider.size = buildData.Size;
+				boxCollider.center = buildData.Offset;
+				boxCollider.isTrigger = true;
+			} else {
+				var sphereCollider = gameObject.AddComponent<SphereCollider> ();
+				sphereCollider.radius = buildData.Radius;
+				sphereCollider.center = buildData.Offset;
+				sphereCollider.isTrigger = true;
+			}
+
+			collider = GetComponent<Collider> ();
+			collider.enabled = false;
 		}
 
 		private void OnTriggerEnter(Collider other) {
