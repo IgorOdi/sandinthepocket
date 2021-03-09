@@ -10,6 +10,9 @@ public class TargetCameraScript : MonoBehaviour {
 	[SerializeField, Range (1f, 20f)]
 	float distance = 15f;
 
+	[SerializeField, Range (0f, 90f)]
+	float angle = 45f;
+
 	[SerializeField, Min (0f)]
 	float focusRadius = 1f;
 
@@ -46,6 +49,7 @@ public class TargetCameraScript : MonoBehaviour {
 		UpdateFocusPoint ();
 		Vector3 lookDirection = transform.forward;
 		transform.localPosition = focusPoint - lookDirection * distance;
+		transform.eulerAngles = new Vector3 (angle, 0, 0);
 	}
 
 	void Start() {
