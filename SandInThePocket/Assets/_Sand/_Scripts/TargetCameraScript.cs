@@ -21,9 +21,13 @@ public class TargetCameraScript : MonoBehaviour {
 
 	Vector3 focusPoint;
 
+
 	void Awake() {
 		focusPoint = focus.position;
 
+	}
+	public void changeAngle(float newAngle) {
+		angle = newAngle;
 	}
 
 	void UpdateFocusPoint() {
