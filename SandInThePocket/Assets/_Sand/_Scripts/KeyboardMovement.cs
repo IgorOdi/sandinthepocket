@@ -10,12 +10,12 @@ public class KeyboardMovement : MonoBehaviour {
 	[SerializeField, Range (0, 100)]
 	float maxSpeed = 10;
 
-	Rigidbody rigidbody;
+	Rigidbody body;
 	Vector2 inputDirection;
 	Vector3 velocity;
 
 	void Awake() {
-		rigidbody = GetComponent<Rigidbody> ();
+		body = GetComponent<Rigidbody> ();
 	}
 
 	void Update() {
@@ -27,13 +27,13 @@ public class KeyboardMovement : MonoBehaviour {
 	void FixedUpdate() {
 		Vector3 desiredVelocity = new Vector3 (inputDirection.x, 0, inputDirection.y) * maxSpeed;
 
-		velocity = rigidbody.velocity;
+		velocity = body.velocity;
 
 		float maxSpeedChange = maxAcceleration * Time.deltaTime;
 		velocity.x = Mathf.MoveTowards (velocity.x, desiredVelocity.x, maxSpeedChange);
 		velocity.z = Mathf.MoveTowards (velocity.z, desiredVelocity.z, maxSpeedChange);
 
-		rigidbody.velocity = velocity;
+		body.velocity = velocity;
 
 		if (inputDirection.magnitude > 0.1) {
 			float inputAngle = Mathf.Atan2 (inputDirection.x, inputDirection.y) * Mathf.Rad2Deg;
