@@ -1,6 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using DG.Tweening;
+using Sirenix.OdinInspector;
 
 [RequireComponent (typeof (Camera))]
 public class TargetCameraScript : MonoBehaviour {
@@ -11,7 +11,7 @@ public class TargetCameraScript : MonoBehaviour {
 	float distance = 15f;
 
 	[SerializeField, Range (0f, 90f)]
-	float angle = 45f;
+	float startAngle = 45f;
 
 	[SerializeField, Min (0f)]
 	float focusRadius = 1f;
@@ -24,10 +24,12 @@ public class TargetCameraScript : MonoBehaviour {
 
 	void Awake() {
 		focusPoint = focus.position;
-
+		ChangeAngle (startAngle, 0);
 	}
-	public void changeAngle(float newAngle) {
-		angle = newAngle;
+
+	public void ChangeAngle(float newAngle, float tweenTime = 0, Ease easing = Ease.Linear) {
+		transform.DORotate (new Vector3 (newAngle, 0, 0), tweenTime)
+			.SetEase (easing);
 	}
 
 	void UpdateFocusPoint() {
@@ -53,14 +55,5 @@ public class TargetCameraScript : MonoBehaviour {
 		UpdateFocusPoint ();
 		Vector3 lookDirection = transform.forward;
 		transform.localPosition = focusPoint - lookDirection * distance;
-		transform.eulerAngles = new Vector3 (angle, 0, 0);
-	}
-
-	void Start() {
-
-	}
-
-	void Update() {
-		LateUpdate ();
 	}
 }
