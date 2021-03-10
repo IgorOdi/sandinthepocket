@@ -8,7 +8,7 @@ public class TargetCameraScript : MonoBehaviour {
 	Transform focus = default;
 
 	[SerializeField, Range (1f, 20f)]
-	float distance = 15f;
+	float offset = 15f;
 
 	[SerializeField, Range (0f, 90f)]
 	float startAngle = 45f;
@@ -29,6 +29,11 @@ public class TargetCameraScript : MonoBehaviour {
 
 	public void ChangeAngle(float newAngle, float tweenTime = 0, Ease easing = Ease.Linear) {
 		transform.DORotate (new Vector3 (newAngle, 0, 0), tweenTime)
+			.SetEase (easing);
+	}
+
+	public void ChangeOffset(float newOffset, float tweenTime = 0, Ease easing = Ease.Linear) {
+		DOTween.To (() => offset, x => offset = x, newOffset, tweenTime)
 			.SetEase (easing);
 	}
 
@@ -54,6 +59,6 @@ public class TargetCameraScript : MonoBehaviour {
 	void LateUpdate() {
 		UpdateFocusPoint ();
 		Vector3 lookDirection = transform.forward;
-		transform.localPosition = focusPoint - lookDirection * distance;
+		transform.localPosition = focusPoint - lookDirection * offset;
 	}
 }
