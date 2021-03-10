@@ -5,10 +5,10 @@ using UnityEngine;
 public class KeyboardMovement : MonoBehaviour {
 
 	[SerializeField, Range (0, 100)]
-	float maxAcceleration;
+	float maxAcceleration = 100;
 
 	[SerializeField, Range (0, 100)]
-	float maxSpeed;
+	float maxSpeed = 10;
 
 	Rigidbody rigidbody;
 	Vector2 inputDirection;
