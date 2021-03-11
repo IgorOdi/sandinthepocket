@@ -7,7 +7,6 @@ public class TargetCameraScript : MonoBehaviour {
 	[SerializeField]
 	Transform currentFocus;
 
-	[SerializeField]
 	Transform followFocus;
 
 	[SerializeField]
@@ -31,6 +30,7 @@ public class TargetCameraScript : MonoBehaviour {
 
 
 	void Awake() {
+		followFocus = new GameObject ("followFocus").transform;
 		focusPoint = currentFocus.position;
 		ChangeAngle (startAngle, 0);
 	}
