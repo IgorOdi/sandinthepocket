@@ -65,6 +65,11 @@ public class TargetCameraScript : MonoBehaviour {
 		ChangePosition (superNewFocus, 1, Ease.Linear);
 	}
 
+		[Button ("do move player")]
+	void changeTestPlayer() {
+		FocusOnPlayer (1);
+	}
+
 	void UpdateFocusPoint() {
 		if (!isTweening) {
 			followFocus.position = currentFocus.position;
