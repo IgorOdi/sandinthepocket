@@ -28,8 +28,10 @@ public class TargetCameraScript : MonoBehaviour {
 
 	Vector3 focusPoint;
 
+	Transform player;
 
 	void Awake() {
+		player = GameObject.Find ("Player").transform;
 		followFocus = new GameObject ("followFocus").transform;
 		focusPoint = currentFocus.position;
 		ChangeAngle (startAngle, 0);
@@ -44,18 +46,23 @@ public class TargetCameraScript : MonoBehaviour {
 		DOTween.To (() => offset, x => offset = x, newOffset, tweenTime)
 			.SetEase (easing);
 	}
-	public void ChangePosition(Transform newFocus, float tweenTime = 0, Ease easing = Ease.Linear) {
+	public Tween ChangePosition(Transform newFocus, float tweenTime = 0, Ease easing = Ease.Linear) {
 		isTweening = true;
-		followFocus.DOMove (newFocus.position, tweenTime)
+		return followFocus.DOMove (newFocus.position, tweenTime)
 			.SetEase (easing)
 			.OnComplete (() => {
 				currentFocus = newFocus;
 				isTweening = false;
 			});
 	}
+
+	public Tween FocusOnPlayer(float tweenTime = 0, Ease easing = Ease.Linear) {
+		return ChangePosition (player, tweenTime, easing);
+	}
+
 	[Button ("do move")]
 	void changeTest() {
-		ChangePosition (superNewFocus, 1);
+		ChangePosition (superNewFocus, 1, Ease.Linear);
 	}
 
 	void UpdateFocusPoint() {
