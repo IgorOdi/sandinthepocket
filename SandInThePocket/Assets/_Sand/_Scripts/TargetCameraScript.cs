@@ -5,7 +5,15 @@ using Sirenix.OdinInspector;
 [RequireComponent (typeof (Camera))]
 public class TargetCameraScript : MonoBehaviour {
 	[SerializeField]
-	Transform focus = default;
+	Transform currentFocus;
+
+	[SerializeField]
+	Transform followFocus;
+
+	[SerializeField]
+	Transform superNewFocus;
+
+	bool isTweening;
 
 	[SerializeField, Range (1f, 20f)]
 	float offset = 15f;
@@ -23,7 +31,7 @@ public class TargetCameraScript : MonoBehaviour {
 
 
 	void Awake() {
-		focusPoint = focus.position;
+		focusPoint = currentFocus.position;
 		ChangeAngle (startAngle, 0);
 	}
 
@@ -36,9 +44,25 @@ public class TargetCameraScript : MonoBehaviour {
 		DOTween.To (() => offset, x => offset = x, newOffset, tweenTime)
 			.SetEase (easing);
 	}
+	public void ChangePosition(Transform newFocus, float tweenTime = 0, Ease easing = Ease.Linear) {
+		isTweening = true;
+		followFocus.DOMove (newFocus.position, tweenTime)
+			.SetEase (easing)
+			.OnComplete (() => {
+				currentFocus = newFocus;
+				isTweening = false;
+			});
+	}
+	[Button ("do move")]
+	void changeTest() {
+		ChangePosition (superNewFocus, 1);
+	}
 
 	void UpdateFocusPoint() {
-		Vector3 targetPoint = focus.position;
+		if (!isTweening) {
+			followFocus.position = currentFocus.position;
+		}
+		Vector3 targetPoint = followFocus.position;
 		if (focusRadius > 0f) {
 			float distance = Vector3.Distance (targetPoint, focusPoint);
 			float t = 1f;
