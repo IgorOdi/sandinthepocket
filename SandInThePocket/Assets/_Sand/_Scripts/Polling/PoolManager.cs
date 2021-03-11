@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -90,6 +91,38 @@ namespace Sand.Pooling {
 
 			ResetTransform (pooled.transform, parent);
 			return pooled;
+		}
+
+		public static void ClearPool(string poolName) {
+
+			foreach (GameObject item in pools[poolName]) {
+				Destroy (item);
+			}
+
+			pools[poolName].Clear ();
+		}
+
+		public static void ClearAllPools() {
+
+			foreach (KeyValuePair<string, Queue<GameObject>> item in pools) {
+
+				ClearPool (item.Key);
+			}
+		}
+
+		public static void DeletePool(string poolName) {
+
+			pools.Remove (poolName);
+			Destroy (managerTransRef.Find (poolName).gameObject);
+		}
+
+		public static void DeleteAllPools() {
+
+			string[] poolNames = pools.Keys.ToArray ();
+			for (int i = 0; i < poolNames.Length; i++) {
+
+				DeletePool (poolNames[i]);
+			}
 		}
 
 		private static void ResetTransform(Transform trans, Transform parent = null, bool activeState = true) {
