@@ -63,7 +63,7 @@ namespace Sand.Pooling {
 				throw new Exception ("There's no pool with this name");
 
 			var pool = GetPool (poolName);
-			pool.AddTo (poolObject);
+			pool.Add (poolObject);
 		}
 
 		public static void ClearAllPools() {

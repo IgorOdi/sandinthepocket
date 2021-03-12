@@ -35,7 +35,7 @@ namespace Sand.Pooling {
 			RootGameObject = new GameObject (Name);
 		}
 
-		public void AddTo(GameObject gameObject) {
+		public void Add(GameObject gameObject) {
 
 			PooledObjects.Enqueue (gameObject);
 			gameObject.transform.Reset (RootGameObject.transform, false);
