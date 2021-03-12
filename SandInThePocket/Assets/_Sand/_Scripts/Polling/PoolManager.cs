@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Sand.Utils;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -8,7 +9,7 @@ namespace Sand.Pooling {
 
 	public class PoolManager : MonoBehaviour {
 
-		private static Dictionary<string, Queue<GameObject>> pools = new Dictionary<string, Queue<GameObject>> ();
+		private static List<Pool> pools = new List<Pool> ();
 		private static Transform managerTransRef;
 
 		[RuntimeInitializeOnLoadMethod (RuntimeInitializeLoadType.BeforeSceneLoad)]
@@ -19,118 +20,67 @@ namespace Sand.Pooling {
 
 		void Awake() => managerTransRef = transform;
 
+		public static bool HasPool(string poolName, out Pool pool) {
+
+			pool = GetPool (poolName);
+			return pool != null;
+		}
+
 		public static bool HasPool(string poolName) {
 
-			return managerTransRef.Find (poolName) != null;
+			return GetPool (poolName) != null;
 		}
 
-		public static Transform CreatePool(string poolName, GameObject poolObject, int count = 1) {
+		public static Pool GetPool(string poolName) {
 
-			Transform poolTrans = CreatePool (poolName);
-
-			GameObject newCopy;
-			for (int i = 0; i < count; i++) {
-
-				newCopy = Instantiate (poolObject);
-				AddToPool (poolName, newCopy);
-			}
-
-			return poolTrans;
+			return pools.Where (p => p.Name.Equals (poolName)).FirstOrDefault ();
 		}
 
-		public static Transform CreatePool(string poolName) {
+		public static Pool CreatePool(string poolName, GameObject poolObject, int count = 1) {
 
-			if (!pools.ContainsKey (poolName)) {
+			if (HasPool (poolName))
+				throw new Exception ("There is already a pool with this name");
 
-				pools.Add (poolName, new Queue<GameObject> ());
-			}
-
-			Transform poolParent = managerTransRef.Find (poolName);
-			if (!poolParent) {
-
-				poolParent = new GameObject (poolName).transform;
-				ResetTransform (poolParent, managerTransRef);
-				return poolParent;
-			} else {
-
-				throw new Exception ("Already has a pool with this name");
-			}
+			var pool = new Pool (poolName, poolObject, count);
+			pool.RootGameObject.transform.Reset (managerTransRef);
+			pools.Add (pool);
+			return pool;
 		}
 
-		public static void AddToPool(string poolName, GameObject poolObject) {
+		public static Pool CreatePool(string poolName) {
 
-			Transform poolParent;
-			if (!HasPool (poolName)) {
+			if (HasPool (poolName))
+				throw new Exception ("There is already a pool with this name");
 
-				poolParent = CreatePool (poolName);
-			} else {
-
-				poolParent = managerTransRef.Find (poolName);
-			}
-
-			if (pools[poolName].Contains (poolObject))
-				throw new Exception ("This object is already on a pool");
-
-			pools[poolName].Enqueue (poolObject);
-			ResetTransform (poolObject.transform, poolParent, false);
+			var pool = new Pool (poolName);
+			pool.RootGameObject.transform.Reset (managerTransRef);
+			return pool;
 		}
 
-		public static GameObject GetFromPool(string poolName, Transform parent = null, Action onFail = null) {
+		public static void AddToPool(string poolName, GameObject poolObject, int count = 1) {
 
-			if (pools[poolName].Count <= 0) {
+			if (!HasPool (poolName))
+				throw new Exception ("There's no pool with this name");
 
-				onFail?.Invoke ();
-				return null;
-			}
-
-			var pooled = pools[poolName].Dequeue ();
-			if (parent == null) {
-				ResetTransform (pooled.transform, null, false);
-				SceneManager.MoveGameObjectToScene (pooled, SceneManager.GetActiveScene ());
-			}
-
-			ResetTransform (pooled.transform, parent);
-			return pooled;
-		}
-
-		public static void ClearPool(string poolName) {
-
-			foreach (GameObject item in pools[poolName]) {
-				Destroy (item);
-			}
-
-			pools[poolName].Clear ();
+			var pool = GetPool (poolName);
+			pool.AddTo (poolObject);
 		}
 
 		public static void ClearAllPools() {
 
-			foreach (KeyValuePair<string, Queue<GameObject>> item in pools) {
+			for (int i = 0; i < pools.Count; i++) {
 
-				ClearPool (item.Key);
+				pools[i].Clear ();
 			}
-		}
-
-		public static void DeletePool(string poolName) {
-
-			pools.Remove (poolName);
-			Destroy (managerTransRef.Find (poolName).gameObject);
 		}
 
 		public static void DeleteAllPools() {
 
-			string[] poolNames = pools.Keys.ToArray ();
-			for (int i = 0; i < poolNames.Length; i++) {
+			for (int i = 0; i < pools.Count; i++) {
 
-				DeletePool (poolNames[i]);
+				pools[i].Delete ();
 			}
-		}
-
-		private static void ResetTransform(Transform trans, Transform parent = null, bool activeState = true) {
-
-			trans.transform.parent = parent;
-			trans.transform.localPosition = Vector3.zero;
-			trans.transform.localEulerAngles = Vector3.zero;
-			trans.transform.localScale = Vector3.one;
+			pools.Clear ();
 		}
 	}
 }
