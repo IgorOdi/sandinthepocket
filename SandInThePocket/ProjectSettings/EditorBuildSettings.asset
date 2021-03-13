@@ -4,5 +4,8 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/_Sand/Scenes/Pooling.unity
+    guid: 01efd943527797b49bdf0b5c462a6029
   m_configObjects: {}
