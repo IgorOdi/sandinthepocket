@@ -7,13 +7,15 @@ namespace Sand.Combat.Weapons {
 	public class MeleeWeaponController : BaseWeaponController {
 
 		public MeleeWeaponData MeleeWeaponData => (MeleeWeaponData) WeaponData;
+		public new MeleeAttackData NextAttack => (MeleeAttackData) MeleeWeaponData.Combo.GetAttack (comboIndex);
+
 
 		void OnValidate() {
 
 			if (WeaponData != null && !WeaponData.GetType ().Equals (typeof (MeleeWeaponData))) {
 
 				WeaponData = null;
-				Debug.LogError("You must select a Melee Weapon");
+				Debug.LogError ("You must select a Melee Weapon");
 			}
 		}
 
@@ -26,14 +28,14 @@ namespace Sand.Combat.Weapons {
 			NextAttack.Context = this;
 			Debug.Log ($"Attacking with {WeaponData.Name}\nAttack Index: {comboIndex} | AttackDamage: {GetNextAttackDamage ()}");
 			this.RunDelayed (NextAttack.TimingData.TotalDuration, () => SetAttacking (false));
-			Damager.Spawn ((MeleeAttackData) NextAttack, transform);
+			MeleeDamager.Spawn (NextAttack, transform);
 
 			IncreaseComboIndex ();
 		}
 
 		protected void IncreaseComboIndex() {
 
-			if (comboIndex < MeleeWeaponData.Combo.Attacks.Count - 1) {
+			if (comboIndex < MeleeWeaponData.Combo.MeleeAttacks.Count - 1) {
 				comboIndex++;
 			} else {
 				comboIndex = 0;

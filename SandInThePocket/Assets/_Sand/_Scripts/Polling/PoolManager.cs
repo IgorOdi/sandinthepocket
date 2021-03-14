@@ -40,6 +40,16 @@ namespace Sand.Pooling {
 			return pools.Where (p => p.Name.Equals (poolName)).FirstOrDefault ();
 		}
 
+		public static GameObject GetFromPool(string poolName) {
+
+			return GetPool (poolName).Get ();
+		}
+
+		public static T GetFromPool<T>(string poolName) {
+
+			return GetPool (poolName).Get<T> ();
+		}
+
 		public static Pool CreatePool(string poolName, GameObject poolObject, int count = 1) {
 
 			if (HasPool (poolName))
@@ -62,7 +72,7 @@ namespace Sand.Pooling {
 			return pool;
 		}
 
-		public static void AddToPool(string poolName, GameObject poolObject, int count = 1) {
+		public static void AddToPool(string poolName, GameObject poolObject) {
 
 			if (!HasPool (poolName))
 				throw new Exception ("There's no pool with this name");

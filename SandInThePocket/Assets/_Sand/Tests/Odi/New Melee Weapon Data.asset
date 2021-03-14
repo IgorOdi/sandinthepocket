@@ -16,4 +16,4 @@ MonoBehaviour:
   BaseDamage: 10
   Cooldown: 0.25
   ComboResetTime: 2
-  Combo: {fileID: 0}
+  Combo: {fileID: 11400000, guid: 361718dee031f00448e4bdb3cba0e01d, type: 2}

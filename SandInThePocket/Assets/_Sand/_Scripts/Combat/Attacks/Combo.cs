@@ -16,10 +16,19 @@ namespace Sand.Combat.Attacks {
 		public ComboWeaponType ComboType;
 
 		[ShowIf ("ComboType", ComboWeaponType.Melee)]
-		public List<MeleeAttackData> Attacks;
+		public List<MeleeAttackData> MeleeAttacks;
 		[ShowIf ("ComboType", ComboWeaponType.Ranged)]
 		public List<RangedAttackData> RangedAttacks;
 
-		public MeleeAttackData GetAttack(int index) { return Attacks[index]; }
+		public BaseAttackData GetAttack(int index) {
+
+			if (ComboType == ComboWeaponType.Melee) {
+
+				return MeleeAttacks[index];
+			} else {
+
+				return RangedAttacks[index];
+			}
+		}
 	}
 }

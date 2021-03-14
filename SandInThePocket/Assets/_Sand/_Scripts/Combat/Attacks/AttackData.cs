@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Sand.Combat.Weapons;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -7,7 +8,7 @@ namespace Sand.Combat.Attacks {
 
 	#region Data Classes
 
-	[System.Serializable]
+	[Serializable]
 	public class DamageData {
 
 		public float WeaponPercentage = 1;
@@ -20,7 +21,7 @@ namespace Sand.Combat.Attacks {
 		}
 	}
 
-	[System.Serializable]
+	[Serializable]
 	public class StatusData {
 
 		public ECombatStatus CombatStatus;
@@ -29,7 +30,7 @@ namespace Sand.Combat.Attacks {
 		public float Duration;
 	}
 
-	[System.Serializable]
+	[Serializable]
 	public class ColliderBuildData {
 
 		public EColliderBuildType ColliderBuildType;
@@ -41,7 +42,7 @@ namespace Sand.Combat.Attacks {
 		public Vector3 Offset;
 	}
 
-	[System.Serializable]
+	[Serializable]
 	public class TimingData {
 
 		[Tooltip ("Time before enabling the collider")]
@@ -51,7 +52,7 @@ namespace Sand.Combat.Attacks {
 		public float TotalDuration => Delay + Duration;
 	}
 
-	[System.Serializable]
+	[Serializable]
 	public class ImpactData {
 
 		[Tooltip ("Force added to the user")]
@@ -60,7 +61,7 @@ namespace Sand.Combat.Attacks {
 		public Vector3 ImpactForce;
 	}
 
-	[System.Serializable]
+	[Serializable]
 	public class ScreenShakeData {
 
 		public float Intensity;
@@ -69,9 +70,26 @@ namespace Sand.Combat.Attacks {
 		public AnimationCurve Curve;
 	}
 
+	public enum MoveMode {
+
+		Speed,
+		Force
+	}
+
+	[Serializable]
+	public class MovingData {
+
+		public MoveMode MoveMode;
+
+		[ShowIf ("MoveMode", MoveMode.Speed)]
+		public float Speed;
+		[ShowIf ("MoveMode", MoveMode.Force)]
+		public Vector3 Force;
+	}
+
 	#endregion
 
-	[System.Serializable]
+	[Serializable]
 	public class BaseAttackData {
 
 		public DamageData DamageData;
@@ -94,15 +112,19 @@ namespace Sand.Combat.Attacks {
 		public int GetFullDamage() => DamageData.GetFullDamage (Context == null ? 0 : Context.WeaponData.BaseDamage);
 	}
 
-	[System.Serializable]
+	[Serializable]
 	public class MeleeAttackData : BaseAttackData {
 
 		public ColliderBuildData ColliderBuildData;
 	}
 
-	[System.Serializable]
+	[Serializable]
 	public class RangedAttackData : BaseAttackData {
 
-		public string ProjectilePoolOverride;
+		public MovingData MovingData;
+
+		[SerializeField]
+		private string PoolOverride;
+		public string ProjectilePoolOverride => string.IsNullOrEmpty (PoolOverride) ? ((RangedWeaponController) Context).RangedWeaponData.ProjectilePool : PoolOverride;
 	}
 }

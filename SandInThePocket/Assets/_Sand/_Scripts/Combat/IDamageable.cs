@@ -5,6 +5,6 @@ namespace Sand.Combat {
 
 	public interface IDamageable {
 
-		void CauseDamage(MeleeAttackData attackData, Action<EAttackResult, CombatActor> success, Action<bool, CombatActor> killed);
+		void CauseDamage(BaseAttackData attackData, Action<EAttackResult, CombatActor> success, Action<bool, CombatActor> killed);
 	}
 }

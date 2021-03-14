@@ -8,7 +8,7 @@ namespace Sand.Combat.Weapons {
 
 		public BaseWeaponData WeaponData;
 		public CombatActor Context { get; set; }
-		public BaseAttackData NextAttack { get { return WeaponData.Combo.GetAttack (comboIndex); } }
+		public virtual BaseAttackData NextAttack => WeaponData.Combo.GetAttack (comboIndex);
 
 		public bool IsAttacking { get; protected set; }
 
