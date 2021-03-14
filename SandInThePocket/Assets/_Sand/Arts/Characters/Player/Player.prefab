@@ -273,6 +273,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxAcceleration: 100
   maxSpeed: 10
+  rollingForce: 1000
+  rollingDuration: 0.5
+  rollingCooldown: 0.25
 --- !u!96 &6244664536762430028
 TrailRenderer:
   serializedVersion: 2
@@ -323,7 +326,7 @@ TrailRenderer:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.19230843
+        value: 0.07692146
         inSlope: 0
         outSlope: 0
         tangentMode: 0
