@@ -19,7 +19,9 @@ namespace Sand.Combat.Weapons {
 			}
 		}
 
-		protected override void OnWeaponPress() {
+		public override void OnWeaponPress() {
+
+			if (cooldownRunningTime > 0) return;
 
 			SetAttacking (true);
 			cooldownRunningTime = MeleeWeaponData.Cooldown;
@@ -45,12 +47,6 @@ namespace Sand.Combat.Weapons {
 			} else {
 				comboIndex = 0;
 			}
-		}
-
-		protected override void Update() {
-
-			base.Update ();
-			if (Input.GetKeyDown (KeyCode.Z) && cooldownRunningTime <= 0) OnWeaponPress ();
 		}
 	}
 }

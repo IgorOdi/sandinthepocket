@@ -135,7 +135,6 @@ namespace Sand.Combat.Attacks {
 
 		public MovingData MovingData;
 		public ChargeData ChargeData;
-		public GameObject Visual;
 		public string PoolOverride;
 	}
 }

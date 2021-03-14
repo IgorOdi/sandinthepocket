@@ -3,7 +3,6 @@ using UnityEngine;
 
 namespace Sand.Combat.Weapons {
 
-	[RequireComponent (typeof (CombatActor))]
 	public abstract class BaseWeaponController : MonoBehaviour {
 
 		public BaseWeaponData WeaponData;
@@ -16,9 +15,9 @@ namespace Sand.Combat.Weapons {
 		protected float comboResetRunningTime;
 		protected int comboIndex;
 
-		protected virtual void OnWeaponPress() { }
-		protected virtual void OnWeaponHold() { }
-		protected virtual void OnWeaponRelease() { }
+		public virtual void OnWeaponPress() { }
+		public virtual void OnWeaponHold() { }
+		public virtual void OnWeaponRelease() { }
 
 		void OnEnable() => Initialize ();
 		protected virtual void Initialize() => Context = GetComponent<CombatActor> ();

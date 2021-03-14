@@ -22,7 +22,9 @@ namespace Sand.Combat.Weapons {
 			}
 		}
 
-		protected override void OnWeaponPress() {
+		public override void OnWeaponPress() {
+
+			if (cooldownRunningTime > 0 || IsAttacking) return;
 
 			SetAttacking (true);
 			cooldownRunningTime = RangedWeaponData.Cooldown;
@@ -31,13 +33,17 @@ namespace Sand.Combat.Weapons {
 			Debug.Log ($"Starting Charging with {RangedWeaponData.Name}");
 		}
 
-		protected override void OnWeaponHold() {
+		public override void OnWeaponHold() {
+
+			if (!IsAttacking) return;
 
 			chargeTime += Time.deltaTime;
 			Debug.Log ($"Charging with {RangedWeaponData.Name}");
 		}
 
-		protected override void OnWeaponRelease() {
+		public override void OnWeaponRelease() {
+
+			if (!IsAttacking) return;
 
 			string poolOrigin = string.IsNullOrEmpty (NextAttack.PoolOverride) ? RangedWeaponData.ProjectilePool : NextAttack.PoolOverride;
 
@@ -54,14 +60,6 @@ namespace Sand.Combat.Weapons {
 			SetAttacking (false);
 
 			Debug.Log ($"Shooting with {RangedWeaponData.Name} | Held Time: {chargeTime}\nAttack Index: {comboIndex} | AttackDamage: {baseProjectile.Data.FullDamage}");
-		}
-
-		protected override void Update() {
-
-			base.Update ();
-			if (Input.GetKey (KeyCode.Z) && cooldownRunningTime <= 0 && !IsAttacking) OnWeaponPress ();
-			if (Input.GetKey (KeyCode.Z) && IsAttacking) OnWeaponHold ();
-			if (Input.GetKeyUp (KeyCode.Z) && IsAttacking) OnWeaponRelease ();
 		}
 	}
 }
