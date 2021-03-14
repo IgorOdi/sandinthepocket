@@ -1,11 +1,12 @@
 ﻿using System;
 using Sand.Combat.Attacks;
+using Sand.Pooling;
 using Sand.Utils;
 using UnityEngine;
 
 namespace Sand.Combat {
 
-	public class Damager : MonoBehaviour {
+	public partial class Damager : MonoBehaviour {
 
 		public AttackData AttackData { get; protected set; }
 
@@ -14,16 +15,14 @@ namespace Sand.Combat {
 		public Action<EAttackResult, CombatActor> OnHitSuccess { get; set; }
 		public Action<bool, CombatActor> OnHitKill { get; set; }
 
-		private new Collider collider;
+		protected new Collider collider;
 		private IDamageable lastHitEnemy;
 
-		public void Configure(AttackData context) {
+		private void OnEnable() {
 
-			this.AttackData = context;
-			ConfigureFromData (context.ColliderBuildData);
-
-			this.RunDelayed (context.TimingData.Delay, EnableDamager);
-			this.RunDelayed (context.TimingData.Delay + context.TimingData.Duration, DisableDamager);
+			ConfigureFromData (AttackData.ColliderBuildData);
+			this.RunDelayed (AttackData.TimingData.Delay, EnableDamager);
+			this.RunDelayed (AttackData.TimingData.Delay + AttackData.TimingData.Duration, DisableDamager);
 		}
 
 		private void EnableDamager() {
@@ -38,27 +37,29 @@ namespace Sand.Combat {
 			collider.enabled = false;
 			OnHitDisable?.Invoke ();
 
-			if (lastHitEnemy == null) OnHitSuccess?.Invoke (EAttackResult.Miss, null);
+			if (lastHitEnemy == null)
+				OnHitSuccess?.Invoke (EAttackResult.Miss, null);
 
-			//TODO: Convert Destroy to Pool;
-			Destroy (gameObject);
+			string colliderShape = GetColliderTypeString (AttackData.ColliderBuildData.ColliderBuildType);
+			PoolManager.AddToPool (colliderShape, gameObject);
 		}
 
 		private void ConfigureFromData(ColliderBuildData buildData) {
 
+			collider = GetComponent<Collider> ();
+
 			if (buildData.ColliderBuildType == EColliderBuildType.Box) {
-				var boxCollider = gameObject.AddComponent<BoxCollider> ();
+				var boxCollider = (BoxCollider) collider;
 				boxCollider.size = buildData.Size;
 				boxCollider.center = buildData.Offset;
 				boxCollider.isTrigger = true;
 			} else {
-				var sphereCollider = gameObject.AddComponent<SphereCollider> ();
+				var sphereCollider = (SphereCollider) collider;
 				sphereCollider.radius = buildData.Radius;
 				sphereCollider.center = buildData.Offset;
 				sphereCollider.isTrigger = true;
 			}
 
-			collider = GetComponent<Collider> ();
 			collider.enabled = false;
 		}
 

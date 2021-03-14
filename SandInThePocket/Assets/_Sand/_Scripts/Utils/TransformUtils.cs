@@ -10,6 +10,7 @@ namespace Sand.Utils {
 			trans.localPosition = Vector3.zero;
 			trans.localEulerAngles = Vector3.zero;
 			trans.localScale = Vector3.one;
+			trans.gameObject.SetActive (activeState);
 		}
 	}
 }

@@ -23,6 +23,8 @@ namespace Sand.Pooling {
 			for (int i = 0; i < count; i++) {
 
 				newCopy = GameObject.Instantiate (poolObject);
+				//Debug.Log (newCopy.GetComponent<Collider> ().enabled);
+				//Debug.Log (newCopy.GetComponent<Combat.Damager> ().enabled);
 				PooledObjects.Enqueue (newCopy);
 				newCopy.transform.Reset (RootGameObject.transform, false);
 			}
@@ -46,12 +48,17 @@ namespace Sand.Pooling {
 			if (PooledObjects.Count <= 0)
 				onFail?.Invoke ();
 
-			return PooledObjects.Dequeue ();
+			return Get ();
 		}
 
 		public GameObject Get() {
 
 			return PooledObjects.Dequeue ();
+		}
+
+		public T Get<T>() {
+
+			return Get ().GetComponent<T> ();
 		}
 
 		public void Clear() {

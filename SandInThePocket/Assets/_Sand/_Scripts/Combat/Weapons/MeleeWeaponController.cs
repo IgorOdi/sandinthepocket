@@ -18,9 +18,7 @@ namespace Sand.Combat.Weapons {
 			NextAttack.Context = this;
 			Debug.Log ($"Attacking with {WeaponData.Name}\nAttack Index: {comboIndex} | AttackDamage: {GetNextAttackDamage ()}");
 			this.RunDelayed (NextAttack.TimingData.TotalDuration, () => SetAttacking (false));
-
-			var damager = SpawnHitArea ();
-			damager.Configure (NextAttack);
+			Damager.Spawn (NextAttack, transform);
 
 			IncreaseComboIndex ();
 		}
@@ -46,17 +44,6 @@ namespace Sand.Combat.Weapons {
 			base.Update ();
 			if (Input.GetKeyDown (KeyCode.Z) && cooldownRunningTime <= 0) OnWeaponPress ();
 			if (comboResetRunningTime <= 0) comboIndex = 0;
-		}
-
-		private Damager SpawnHitArea() {
-
-			//TODO: Convert to pool;
-			GameObject hitArea = new GameObject ($"{WeaponData.Name} Hit Area {comboIndex}");
-			hitArea.transform.parent = transform;
-			hitArea.transform.localPosition = Vector3.zero;
-			hitArea.transform.localEulerAngles = Vector3.zero;
-
-			return hitArea.AddComponent<Damager> ();
 		}
 	}
 }
