@@ -1,4 +1,5 @@
 ﻿using Sand.Combat.Attacks;
+using Sand.Combat.Damaging;
 using Sand.Utils;
 using UnityEngine;
 
@@ -7,8 +8,7 @@ namespace Sand.Combat.Weapons {
 	public class MeleeWeaponController : BaseWeaponController {
 
 		public MeleeWeaponData MeleeWeaponData => (MeleeWeaponData) WeaponData;
-		public new MeleeAttackData NextAttack => (MeleeAttackData) MeleeWeaponData.Combo.GetAttack (comboIndex);
-
+		public new MeleeAttackData NextAttack => (MeleeAttackData) WeaponData.Combo.GetAttack (comboIndex);
 
 		void OnValidate() {
 
@@ -25,12 +25,17 @@ namespace Sand.Combat.Weapons {
 			cooldownRunningTime = MeleeWeaponData.Cooldown;
 			comboResetRunningTime = MeleeWeaponData.ComboResetTime;
 
-			NextAttack.Context = this;
-			Debug.Log ($"Attacking with {WeaponData.Name}\nAttack Index: {comboIndex} | AttackDamage: {GetNextAttackDamage ()}");
 			this.RunDelayed (NextAttack.TimingData.TotalDuration, () => SetAttacking (false));
-			MeleeDamager.Spawn (NextAttack, transform);
+
+			string poolOrigin = Damager.GetColliderTypeString (NextAttack.ColliderBuildData.ColliderBuildType);
+			DamagerData damagerData = new DamagerData (NextAttack, poolOrigin, this);
+
+			Damager damager = Damager.Spawn (NextAttack.ColliderBuildData, transform);
+			damager.Initialize (damagerData, NextAttack.TimingData.Delay, NextAttack.TimingData.Duration);
 
 			IncreaseComboIndex ();
+
+			Debug.Log ($"Attacking with {WeaponData.Name}\nAttack Index: {comboIndex} | AttackDamage: {damagerData.FullDamage}");
 		}
 
 		protected void IncreaseComboIndex() {

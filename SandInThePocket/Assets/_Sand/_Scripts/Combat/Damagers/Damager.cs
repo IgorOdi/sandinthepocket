@@ -4,51 +4,48 @@ using Sand.Pooling;
 using Sand.Utils;
 using UnityEngine;
 
-namespace Sand.Combat {
+namespace Sand.Combat.Damaging {
 
-	public abstract class Damager<T> : MonoBehaviour where T : BaseAttackData {
+	public abstract partial class Damager : MonoBehaviour {
 
-		public T AttackData { get; set; }
+		public DamagerData Data { get; protected set; }
 
 		public Action OnHitEnable { get; set; }
 		public Action OnHitDisable { get; set; }
 		public Action<EAttackResult, CombatActor> OnHitSuccess { get; set; }
 		public Action<bool, CombatActor> OnHitKill { get; set; }
 
-		protected virtual string PoolName { get; }
-
 		protected new Collider collider;
 		protected IDamageable lastHitEnemy;
 
-		protected virtual void OnEnable() {
+		public virtual void Initialize(DamagerData data, float delay, float duration) {
 
-			this.RunDelayed (AttackData.TimingData.Delay, EnableDamager);
-			this.RunDelayed (AttackData.TimingData.Delay + AttackData.TimingData.Duration, DisableDamager);
+			Data = data;
+			this.RunDelayed (delay, OnStart);
+			this.RunDelayed (duration, OnEnd);
 		}
 
-		protected virtual void EnableDamager() {
+		protected virtual void OnStart() {
 
 			lastHitEnemy = null;
-			collider.enabled = true;
 			OnHitEnable?.Invoke ();
 		}
 
-		protected virtual void DisableDamager() {
+		protected virtual void OnEnd() {
 
-			collider.enabled = false;
 			OnHitDisable?.Invoke ();
 
 			if (lastHitEnemy == null)
 				OnHitSuccess?.Invoke (EAttackResult.Miss, null);
 
-			PoolManager.AddToPool (PoolName, gameObject);
+			PoolManager.AddToPool (Data.PoolOrigin, gameObject);
 		}
 
 		protected virtual void OnTriggerEnter(Collider other) {
 
 			if (other.gameObject.TryGetComponent<IDamageable> (out lastHitEnemy)) {
 
-				lastHitEnemy.CauseDamage (AttackData,
+				lastHitEnemy.CauseDamage (Data,
 					(atkResult, actor) => OnHitSuccess?.Invoke (atkResult, actor),
 					(killed, actor) => OnHitKill?.Invoke (killed, actor)
 				);

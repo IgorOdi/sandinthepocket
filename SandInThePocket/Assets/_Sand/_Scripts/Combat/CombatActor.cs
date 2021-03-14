@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Sand.Combat.Attacks;
+using Sand.Combat.Damaging;
 using UnityEngine;
 
 namespace Sand.Combat {
@@ -36,7 +37,7 @@ namespace Sand.Combat {
 			OnActorSpawn?.Invoke (this);
 		}
 
-		protected virtual void OnHit(BaseAttackData attackData, EAttackResult attackResult) {
+		protected virtual void OnHit(DamagerData attackData, EAttackResult attackResult) {
 
 			PlayHitFX ();
 			OnActorGlobalHit?.Invoke (this, attackResult);
@@ -44,7 +45,7 @@ namespace Sand.Combat {
 			Debug.Log ($"Hit on {gameObject.name} from {attackData.User?.name}'s {attackData.Context.WeaponData.Name}");
 		}
 
-		protected virtual void OnDeath(BaseAttackData attackData) {
+		protected virtual void OnDeath(DamagerData attackData) {
 
 			PlayDeathFX ();
 			OnActorGlobalDeath?.Invoke (this);
@@ -122,13 +123,13 @@ namespace Sand.Combat {
 			}
 		}
 
-		public void CauseDamage(BaseAttackData attackData, Action<EAttackResult, CombatActor> atkResult, Action<bool, CombatActor> killed) {
+		public void CauseDamage(DamagerData attackData, Action<EAttackResult, CombatActor> atkResult, Action<bool, CombatActor> killed) {
 
-			ActorStats.Health -= attackData.GetFullDamage ();
+			ActorStats.Health -= attackData.FullDamage;
 			atkResult?.Invoke (EAttackResult.Success, this);
 			OnHit (attackData, EAttackResult.Success);
 
-			AddStatus (attackData.DamageData.StatusData);
+			AddStatus (attackData.Statuses);
 
 			bool killSucess = ActorStats.Health <= 0;
 

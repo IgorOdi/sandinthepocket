@@ -6,6 +6,44 @@ using UnityEngine;
 
 namespace Sand.Combat.Attacks {
 
+	public class DamagerData {
+
+		public int FullDamage { get; protected set; }
+		public readonly Vector3 ImpactForce;
+		public readonly List<StatusData> Statuses;
+		public readonly ScreenShakeData ScreenShakeData;
+
+		public string PoolOrigin;
+		public readonly BaseWeaponController Context;
+		public CombatActor User => Context.Context;
+
+		public DamagerData(BaseAttackData attackData, string poolOrigin, BaseWeaponController context) {
+
+			FullDamage = attackData.DamageData.GetFullDamage (context.WeaponData.BaseDamage);
+			ImpactForce = attackData.ImpactData.ImpactForce;
+			Statuses = attackData.DamageData.StatusData;
+			ScreenShakeData = attackData.ScreenShakeData;
+
+			PoolOrigin = poolOrigin;
+			Context = context;
+		}
+	}
+
+	public class ProjectileDamagerData : DamagerData {
+
+		public ProjectileDamagerData(RangedAttackData attackData, float chargeTime, string poolOrigin, BaseWeaponController context) :
+			base (attackData, poolOrigin, context) {
+
+			if (attackData.ChargeData.ChargeMathMode == ChargeMathMode.Multiplicative) {
+
+				FullDamage = Mathf.RoundToInt (FullDamage * attackData.ChargeData.GetEvaluted (chargeTime));
+			} else {
+
+				FullDamage = Mathf.RoundToInt (FullDamage + attackData.ChargeData.GetEvaluted (chargeTime));
+			}
+		}
+	}
+
 	#region Data Classes
 
 	[Serializable]
@@ -87,6 +125,26 @@ namespace Sand.Combat.Attacks {
 		public Vector3 Force;
 	}
 
+	public enum ChargeMathMode {
+
+		Additive,
+		Multiplicative
+	}
+
+	[Serializable]
+	public class ChargeData {
+
+		public float MaxChargeTime;
+		public AnimationCurve ChargeEvaluation;
+		public ChargeMathMode ChargeMathMode;
+
+		public float GetEvaluted(float chargedTime) {
+
+			float timeConverted = Mathf.Clamp (chargedTime, 0, MaxChargeTime) / MaxChargeTime;
+			return ChargeEvaluation.Evaluate (timeConverted);
+		}
+	}
+
 	#endregion
 
 	[Serializable]
@@ -98,9 +156,7 @@ namespace Sand.Combat.Attacks {
 		public ImpactData ImpactData;
 		[Tooltip ("Not implemented")]
 		public ScreenShakeData ScreenShakeData;
-
-		public BaseWeaponController Context { get; set; }
-		public CombatActor User => Context.Context;
+		public ColliderBuildData ColliderBuildData;
 
 #if UNITY_EDITOR
 		[Button ("Copy")]
@@ -108,23 +164,17 @@ namespace Sand.Combat.Attacks {
 			Debug.Log ("Not implemented");
 		}
 #endif
-
-		public int GetFullDamage() => DamageData.GetFullDamage (Context == null ? 0 : Context.WeaponData.BaseDamage);
 	}
 
 	[Serializable]
-	public class MeleeAttackData : BaseAttackData {
-
-		public ColliderBuildData ColliderBuildData;
-	}
+	public class MeleeAttackData : BaseAttackData { }
 
 	[Serializable]
 	public class RangedAttackData : BaseAttackData {
 
 		public MovingData MovingData;
-
-		[SerializeField]
-		private string PoolOverride;
-		public string ProjectilePoolOverride => string.IsNullOrEmpty (PoolOverride) ? ((RangedWeaponController) Context).RangedWeaponData.ProjectilePool : PoolOverride;
+		public ChargeData ChargeData;
+		public GameObject Visual;
+		public string PoolOverride;
 	}
 }

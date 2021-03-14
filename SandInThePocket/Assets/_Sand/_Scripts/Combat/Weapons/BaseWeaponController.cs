@@ -21,18 +21,8 @@ namespace Sand.Combat.Weapons {
 		protected virtual void OnWeaponRelease() { }
 
 		void OnEnable() => Initialize ();
-		protected virtual void Initialize() {
-
-			Context = GetComponent<CombatActor> ();
-		}
-
+		protected virtual void Initialize() => Context = GetComponent<CombatActor> ();
 		protected void SetAttacking(bool attacking) => IsAttacking = attacking;
-
-		protected DamageData GetDamageSet(int index) => WeaponData.Combo.GetAttack (index).DamageData;
-		protected DamageData GetNextDamageSet() => GetDamageSet (comboIndex);
-
-		protected int GetAttackDamage(int index) => GetDamageSet (index).GetFullDamage (WeaponData.BaseDamage);
-		protected int GetNextAttackDamage() => GetAttackDamage (comboIndex);
 
 		protected virtual void Update() {
 

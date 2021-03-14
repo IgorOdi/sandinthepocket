@@ -1,5 +1,5 @@
 ﻿using Sand.Combat.Attacks;
-using Sand.Combat.Projectiles;
+using Sand.Combat.Damaging;
 using Sand.Pooling;
 using Sand.Utils;
 using UnityEngine;
@@ -9,9 +9,9 @@ namespace Sand.Combat.Weapons {
 	public class RangedWeaponController : BaseWeaponController {
 
 		public RangedWeaponData RangedWeaponData => (RangedWeaponData) WeaponData;
-		public new RangedAttackData NextAttack => (RangedAttackData) RangedWeaponData.Combo.GetAttack (comboIndex);
+		private new RangedAttackData NextAttack => (RangedAttackData) WeaponData.Combo.GetAttack (comboIndex);
 
-		protected float holdTime;
+		protected float chargeTime;
 
 		void OnValidate() {
 
@@ -26,38 +26,39 @@ namespace Sand.Combat.Weapons {
 
 			SetAttacking (true);
 			cooldownRunningTime = RangedWeaponData.Cooldown;
+			chargeTime = 0;
 
-			NextAttack.Context = this;
 			Debug.Log ($"Starting Charging with {RangedWeaponData.Name}");
-
-			holdTime = 0;
 		}
 
 		protected override void OnWeaponHold() {
 
-			holdTime += Time.deltaTime;
+			chargeTime += Time.deltaTime;
 			Debug.Log ($"Charging with {RangedWeaponData.Name}");
 		}
 
 		protected override void OnWeaponRelease() {
 
-			Debug.Log ($"Shooting with {RangedWeaponData.Name} | Held Time: {holdTime}\nAttack Index: {comboIndex} | AttackDamage: {GetNextAttackDamage ()}");
+			string poolOrigin = string.IsNullOrEmpty (NextAttack.PoolOverride) ? RangedWeaponData.ProjectilePool : NextAttack.PoolOverride;
 
-			BaseProjectile baseProjectile = PoolManager.GetFromPool<BaseProjectile> (NextAttack.ProjectilePoolOverride);
-			baseProjectile.AttackData = NextAttack;
+			RangedDamager baseProjectile = PoolManager.GetFromPool<RangedDamager> (poolOrigin);
+			DamagerData damagerData = new ProjectileDamagerData (NextAttack, chargeTime, poolOrigin, this);
 
 			//Improviso por enquanto;
 			Vector3 shootPos = transform.position + transform.forward * 1.5f + transform.up * 0.5f;
 
 			baseProjectile.transform.Reset (null, shootPos, transform.eulerAngles);
 			baseProjectile.gameObject.MoveToCurrentScene ();
+
+			baseProjectile.Initialize (damagerData, NextAttack.TimingData.Duration, NextAttack.MovingData);
 			SetAttacking (false);
+
+			Debug.Log ($"Shooting with {RangedWeaponData.Name} | Held Time: {chargeTime}\nAttack Index: {comboIndex} | AttackDamage: {baseProjectile.Data.FullDamage}");
 		}
 
 		protected override void Update() {
 
 			base.Update ();
-			//if (Input.GetKeyDown (KeyCode.Z) && cooldownRunningTime <= 0) OnWeaponPress ();
 			if (Input.GetKey (KeyCode.Z) && cooldownRunningTime <= 0 && !IsAttacking) OnWeaponPress ();
 			if (Input.GetKey (KeyCode.Z) && IsAttacking) OnWeaponHold ();
 			if (Input.GetKeyUp (KeyCode.Z) && IsAttacking) OnWeaponRelease ();
