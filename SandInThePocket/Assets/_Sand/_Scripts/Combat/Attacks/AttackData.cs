@@ -1,48 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using Sand.Combat.Weapons;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace Sand.Combat.Attacks {
-
-	public class DamagerData {
-
-		public int FullDamage { get; protected set; }
-		public readonly Vector3 ImpactForce;
-		public readonly List<StatusData> Statuses;
-		public readonly ScreenShakeData ScreenShakeData;
-
-		public string PoolOrigin;
-		public readonly BaseWeaponController Context;
-		public CombatActor User => Context.Context;
-
-		public DamagerData(BaseAttackData attackData, string poolOrigin, BaseWeaponController context) {
-
-			FullDamage = attackData.DamageData.GetFullDamage (context.WeaponData.BaseDamage);
-			ImpactForce = attackData.ImpactData.ImpactForce;
-			Statuses = attackData.DamageData.StatusData;
-			ScreenShakeData = attackData.ScreenShakeData;
-
-			PoolOrigin = poolOrigin;
-			Context = context;
-		}
-	}
-
-	public class ProjectileDamagerData : DamagerData {
-
-		public ProjectileDamagerData(RangedAttackData attackData, float chargeTime, string poolOrigin, BaseWeaponController context) :
-			base (attackData, poolOrigin, context) {
-
-			if (attackData.ChargeData.ChargeMathMode == ChargeMathMode.Multiplicative) {
-
-				FullDamage = Mathf.RoundToInt (FullDamage * attackData.ChargeData.GetEvaluted (chargeTime));
-			} else {
-
-				FullDamage = Mathf.RoundToInt (FullDamage + attackData.ChargeData.GetEvaluted (chargeTime));
-			}
-		}
-	}
 
 	#region Data Classes
 

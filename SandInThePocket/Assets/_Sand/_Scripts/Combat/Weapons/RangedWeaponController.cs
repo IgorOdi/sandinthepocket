@@ -42,7 +42,7 @@ namespace Sand.Combat.Weapons {
 			string poolOrigin = string.IsNullOrEmpty (NextAttack.PoolOverride) ? RangedWeaponData.ProjectilePool : NextAttack.PoolOverride;
 
 			RangedDamager baseProjectile = PoolManager.GetFromPool<RangedDamager> (poolOrigin);
-			DamagerData damagerData = new ProjectileDamagerData (NextAttack, chargeTime, poolOrigin, this);
+			ProjectileDamagerData damagerData = new ProjectileDamagerData (NextAttack, chargeTime, poolOrigin, this);
 
 			//Improviso por enquanto;
 			Vector3 shootPos = transform.position + transform.forward * 1.5f + transform.up * 0.5f;

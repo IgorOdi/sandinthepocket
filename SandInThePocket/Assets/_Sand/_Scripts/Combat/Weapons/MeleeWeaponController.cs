@@ -28,7 +28,7 @@ namespace Sand.Combat.Weapons {
 			this.RunDelayed (NextAttack.TimingData.TotalDuration, () => SetAttacking (false));
 
 			string poolOrigin = Damager.GetColliderTypeString (NextAttack.ColliderBuildData.ColliderBuildType);
-			DamagerData damagerData = new DamagerData (NextAttack, poolOrigin, this);
+			MeleeDamagerData damagerData = new MeleeDamagerData (NextAttack, poolOrigin, this);
 
 			Damager damager = Damager.Spawn (NextAttack.ColliderBuildData, transform);
 			damager.Initialize (damagerData, NextAttack.TimingData.Delay, NextAttack.TimingData.Duration);
