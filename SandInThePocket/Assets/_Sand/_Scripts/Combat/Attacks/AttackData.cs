@@ -72,27 +72,37 @@ namespace Sand.Combat.Attacks {
 	#endregion
 
 	[System.Serializable]
-	public class AttackData {
+	public class BaseAttackData {
 
 		public DamageData DamageData;
 		public TimingData TimingData;
-		public ColliderBuildData ColliderBuildData;
 		[Tooltip ("Not implemented")]
 		public ImpactData ImpactData;
 		[Tooltip ("Not implemented")]
 		public ScreenShakeData ScreenShakeData;
 
 		public BaseWeaponController Context { get; set; }
-		public CombatActor User { get { return Context.Context; } }
+		public CombatActor User => Context.Context;
 
 #if UNITY_EDITOR
 		[Button ("Copy")]
-		public void Test() {
+		public void Copy() {
 			Debug.Log ("Not implemented");
 		}
 #endif
 
 		public int GetFullDamage() => DamageData.GetFullDamage (Context == null ? 0 : Context.WeaponData.BaseDamage);
+	}
 
+	[System.Serializable]
+	public class MeleeAttackData : BaseAttackData {
+
+		public ColliderBuildData ColliderBuildData;
+	}
+
+	[System.Serializable]
+	public class RangedAttackData : BaseAttackData {
+
+		public string ProjectilePoolOverride;
 	}
 }

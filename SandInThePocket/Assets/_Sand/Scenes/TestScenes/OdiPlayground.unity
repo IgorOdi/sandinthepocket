@@ -834,6 +834,7 @@ GameObject:
   - component: {fileID: 1660531822}
   - component: {fileID: 1660531826}
   - component: {fileID: 1660531825}
+  - component: {fileID: 1660531827}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -848,7 +849,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1660531821}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8e42886b27a11274a84393921452d49a, type: 3}
   m_Name: 
@@ -914,6 +915,19 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0.5, z: 0}
+--- !u!114 &1660531827
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1660531821}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b7570687868a8d4fb6a07fa152a72ad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  WeaponData: {fileID: 11400000, guid: 969198f3640e6af4d827ff86e57e73d1, type: 2}
 --- !u!1 &2061601540
 GameObject:
   m_ObjectHideFlags: 0

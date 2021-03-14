@@ -1,10 +1,9 @@
-using Sand.Combat.Attacks;
+﻿using Sand.Combat.Attacks;
 using UnityEngine;
 
 namespace Sand.Combat.Weapons {
 
-	[CreateAssetMenu (menuName = "Combat/Weapon Data", fileName = "New Weapon Data")]
-	public class WeaponData : ScriptableObject {
+	public abstract class BaseWeaponData : ScriptableObject {
 
 		public string Name;
 		public int BaseDamage;

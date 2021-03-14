@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Sand.Combat;
 using Sand.Utils;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -22,7 +21,7 @@ namespace Sand.Pooling {
 		private void Awake() {
 
 			managerTransRef = transform;
-			Damager.GenerateDamagerPool ();
+			Resources.Load<PoolSettings> ("PoolSettings").Initialize ();
 		}
 
 		public static bool HasPool(string poolName, out Pool pool) {

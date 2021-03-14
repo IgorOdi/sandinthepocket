@@ -8,7 +8,7 @@ namespace Sand.Combat {
 
 	public partial class Damager : MonoBehaviour {
 
-		public AttackData AttackData { get; protected set; }
+		public MeleeAttackData AttackData { get; protected set; }
 
 		public Action OnHitEnable { get; set; }
 		public Action OnHitDisable { get; set; }

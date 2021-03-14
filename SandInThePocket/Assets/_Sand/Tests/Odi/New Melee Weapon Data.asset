@@ -10,12 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e63c9cc72adf87249b1c259f0fb8a937, type: 3}
-  m_Name: New Weapon Data
+  m_Name: New Melee Weapon Data
   m_EditorClassIdentifier: 
   Name: Master Sword
   BaseDamage: 10
   Cooldown: 0.25
   ComboResetTime: 2
-  DamageType: 1
-  ChanceToEffect: 0
-  Combo: {fileID: 11400000, guid: 361718dee031f00448e4bdb3cba0e01d, type: 2}
+  Combo: {fileID: 0}

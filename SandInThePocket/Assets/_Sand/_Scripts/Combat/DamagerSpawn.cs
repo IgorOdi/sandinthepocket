@@ -10,26 +10,7 @@ namespace Sand.Combat {
 		protected const string BOX_DAMAGER = "BoxDamager";
 		protected const string SPHERE_DAMAGER = "SphereDamager";
 
-		public static void GenerateDamagerPool() {
-
-			GameObject boxDamager = new GameObject (BOX_DAMAGER);
-			boxDamager.gameObject.SetActive (false);
-			boxDamager.AddComponent<BoxCollider> ();
-			boxDamager.AddComponent<Damager> ();
-
-			GameObject sphereDamager = new GameObject (SPHERE_DAMAGER);
-			sphereDamager.SetActive (false);
-			sphereDamager.AddComponent<SphereCollider> ();
-			sphereDamager.AddComponent<Damager> ();
-
-			PoolManager.CreatePool (BOX_DAMAGER, boxDamager, 10);
-			PoolManager.CreatePool (SPHERE_DAMAGER, sphereDamager, 10);
-
-			Destroy (boxDamager);
-			Destroy (sphereDamager);
-		}
-
-		public static Damager Spawn(AttackData data, Transform parent = null, bool activeState = true) {
+		public static Damager Spawn(MeleeAttackData data, Transform parent = null, bool activeState = true) {
 
 			string colliderShape = GetColliderTypeString (data.ColliderBuildData.ColliderBuildType);
 			Damager damager = PoolManager.GetPool (colliderShape).Get<Damager> ();

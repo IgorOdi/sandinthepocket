@@ -36,7 +36,7 @@ namespace Sand.Combat {
 			OnActorSpawn?.Invoke (this);
 		}
 
-		protected virtual void OnHit(AttackData attackData, EAttackResult attackResult) {
+		protected virtual void OnHit(MeleeAttackData attackData, EAttackResult attackResult) {
 
 			PlayHitFX ();
 			OnActorGlobalHit?.Invoke (this, attackResult);
@@ -44,7 +44,7 @@ namespace Sand.Combat {
 			Debug.Log ($"Hit on {gameObject.name} from {attackData.User?.name}'s {attackData.Context.WeaponData.Name}");
 		}
 
-		protected virtual void OnDeath(AttackData attackData) {
+		protected virtual void OnDeath(MeleeAttackData attackData) {
 
 			PlayDeathFX ();
 			OnActorGlobalDeath?.Invoke (this);
@@ -122,7 +122,7 @@ namespace Sand.Combat {
 			}
 		}
 
-		public void CauseDamage(AttackData attackData, Action<EAttackResult, CombatActor> atkResult, Action<bool, CombatActor> killed) {
+		public void CauseDamage(MeleeAttackData attackData, Action<EAttackResult, CombatActor> atkResult, Action<bool, CombatActor> killed) {
 
 			ActorStats.Health -= attackData.GetFullDamage ();
 			atkResult?.Invoke (EAttackResult.Success, this);
