@@ -13,9 +13,18 @@ namespace Sand.Combat {
 		[HideInInspector]
 		public int DamagePerSecond;
 		[HideInInspector]
+		public float SlowPercent;
+		[HideInInspector]
 		public float CurrentDuration;
 		[HideInInspector]
 		public float Duration;
+		[HideInInspector]
+		public bool Stun;
+
+		[HideInInspector]
+		public Action<EAttackResult, CombatActor> OnTickResult;
+		[HideInInspector]
+		public Action<bool, CombatActor> OnKill;
 
 		public Status(StatusData status) {
 
@@ -25,6 +34,8 @@ namespace Sand.Combat {
 			Type = status.CombatStatus;
 			DamagePerSecond = data.DamagePerSecond;
 			CurrentDuration = data.Duration;
+			SlowPercent = data.SlowPercent;
+			Stun = data.Stun;
 		}
 	}
 }

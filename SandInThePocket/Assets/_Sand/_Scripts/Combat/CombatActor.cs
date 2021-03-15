@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Sand.Combat.Attacks;
 using Sand.Combat.Damaging;
+using Sand.Utils;
 using UnityEngine;
 
 namespace Sand.Combat {
@@ -22,12 +23,14 @@ namespace Sand.Combat {
 		public static event Action<CombatActor, EAttackResult> OnActorGlobalHit;
 		public static event Action<CombatActor> OnActorGlobalDeath;
 		public static event Action<Status> OnGlobalAddStatus;
+		public static event Action<Status, EAttackResult> OnGlobalStatusTick;
 		public static event Action<Status> OnGlobalRemoveStatus;
 
 		public Action<CombatActor> OnActorSpawn;
 		public Action<CombatActor, EAttackResult> OnActorHit;
 		public Action<CombatActor> OnActorDeath;
 		public Action<Status> OnAddStatus;
+		public Action<Status, EAttackResult> OnStatusTick;
 		public Action<Status> OnRemoveStatus;
 
 		void OnEnable() => OnSpawn ();
@@ -37,12 +40,20 @@ namespace Sand.Combat {
 			OnActorSpawn?.Invoke (this);
 		}
 
-		protected virtual void OnHit(DamagerData attackData, EAttackResult attackResult) {
+		protected virtual void OnHit(DamagerData attackData, EAttackResult result) {
 
 			PlayHitFX ();
-			OnActorGlobalHit?.Invoke (this, attackResult);
-			OnActorHit?.Invoke (this, attackResult);
+			OnActorGlobalHit?.Invoke (this, result);
+			OnActorHit?.Invoke (this, result);
 			Debug.Log ($"Hit on {gameObject.name} from {attackData.User?.name}'s {attackData.Context.WeaponData.Name}");
+		}
+
+		protected virtual void OnTick(Status status, EAttackResult result) {
+
+			PlayHitFX ();
+			OnGlobalStatusTick?.Invoke (status, result);
+			OnStatusTick?.Invoke (status, result);
+			Debug.Log ($"{gameObject.name} took {status.DamagePerSecond} damage from {status.Type.ToString ()}");
 		}
 
 		protected virtual void OnDeath(DamagerData attackData) {
@@ -51,6 +62,21 @@ namespace Sand.Combat {
 			OnActorGlobalDeath?.Invoke (this);
 			OnActorDeath?.Invoke (this);
 			Debug.Log ($"{gameObject.name} was killed by {attackData.User?.name}'s {attackData.Context.WeaponData.Name}");
+
+			ReturnToPool ("");
+		}
+
+		protected virtual void OnTickDeath(Status status) {
+
+			PlayDeathFX ();
+			OnActorGlobalDeath?.Invoke (this);
+			OnActorDeath?.Invoke (this);
+			Debug.Log ($"{gameObject.name} was killed by {status.Type.ToString ()}");
+
+			ReturnToPool ("");
+		}
+
+		protected virtual void ReturnToPool(string poolName) {
 
 			//TODO: Convert to pool;
 			Destroy (gameObject);
@@ -95,6 +121,8 @@ namespace Sand.Combat {
 
 			//TODO: Loading the FX based on status type goes here;
 			Statuses.Add (status);
+			TakeDamageFromStatus (status);
+
 			OnAddStatus?.Invoke (status);
 			OnGlobalAddStatus?.Invoke (status);
 		}
@@ -104,6 +132,14 @@ namespace Sand.Combat {
 			Statuses.Remove (status);
 			OnRemoveStatus?.Invoke (status);
 			OnGlobalRemoveStatus?.Invoke (status);
+		}
+
+		protected void TakeDamageFromStatus(Status status) {
+
+			if (!Statuses.Contains (status)) return;
+
+			TickDamage (status, status.OnTickResult, status.OnKill);
+			this.RunDelayed (1f, () => TakeDamageFromStatus (status));
 		}
 
 		protected void RemoveAllStatus() {
@@ -121,6 +157,18 @@ namespace Sand.Combat {
 				Statuses[i].CurrentDuration -= Time.deltaTime;
 				if (Statuses[i].CurrentDuration <= 0) RemoveStatus (Statuses[i]);
 			}
+		}
+
+		public void TickDamage(Status status, Action<EAttackResult, CombatActor> tickResult, Action<bool, CombatActor> killResult) {
+
+			ActorStats.Health -= status.DamagePerSecond;
+			tickResult?.Invoke (EAttackResult.Success, this);
+			OnTick (status, EAttackResult.Success);
+
+			bool killSucess = ActorStats.Health <= 0;
+
+			killResult?.Invoke (killSucess, this);
+			if (killSucess) OnTickDeath (status);
 		}
 
 		public void CauseDamage(DamagerData attackData, Action<EAttackResult, CombatActor> atkResult, Action<bool, CombatActor> killed) {

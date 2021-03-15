@@ -36,7 +36,8 @@
 
 		Success,
 		Miss,
-		Blocked
+		Blocked,
+		Resisted,
 	}
 
 	public enum EComboWeaponType {
