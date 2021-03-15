@@ -84,7 +84,7 @@ namespace Sand.Combat {
 
 				if (Statuses[i].Type == status.Type) {
 
-					if (Statuses[i].CurrentDuration <= status.TotalDuration) {
+					if (Statuses[i].CurrentDuration <= status.Duration) {
 
 						Statuses[i] = status;
 					}

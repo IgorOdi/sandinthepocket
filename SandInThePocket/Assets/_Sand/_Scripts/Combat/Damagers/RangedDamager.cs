@@ -20,7 +20,7 @@ namespace Sand.Combat.Damaging {
 			OnStart ();
 			this.RunDelayed (duration, OnEnd);
 
-			if (movingData.MoveMode == MoveMode.Speed) {
+			if (movingData.MoveMode == EMoveMode.Speed) {
 
 				rigidbody.useGravity = false;
 				rigidbody.velocity = transform.forward * movingData.Speed;

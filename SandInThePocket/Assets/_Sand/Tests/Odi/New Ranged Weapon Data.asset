@@ -15,6 +15,10 @@ MonoBehaviour:
   Name: Master Bow
   BaseDamage: 7
   Cooldown: 0.5
+  weaponElementSet:
+    WeaponElement: 1
+    StatusLevel: 0
+    Chance: 0.5
   ComboResetTime: 2
   Combo: {fileID: 11400000, guid: 110aa4e4a1bb16b4092757e8adc549a4, type: 2}
   ProjectilePool: BaseProjectile

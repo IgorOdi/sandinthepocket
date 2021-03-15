@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Sand.Database;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -24,9 +25,24 @@ namespace Sand.Combat.Attacks {
 	public class StatusData {
 
 		public ECombatStatus CombatStatus;
+		public EStatusLevel Level;
 		[Tooltip ("Chance percentage to apply the status"), Range (0f, 1f)]
 		public float Chance;
-		public float Duration;
+
+		public StatusData(ECombatStatus status, EStatusLevel level, float chance) {
+
+			CombatStatus = status;
+			Level = level;
+			Chance = chance;
+		}
+
+		public StatusData(Weapons.BaseWeaponData weaponData) {
+
+			ECombatStatus statusType = StatusElementRelation.Relation[weaponData.weaponElementSet.WeaponElement];
+			CombatStatus = statusType;
+			Level = weaponData.weaponElementSet.StatusLevel;
+			Chance = weaponData.weaponElementSet.Chance;
+		}
 	}
 
 	[Serializable]
@@ -69,7 +85,7 @@ namespace Sand.Combat.Attacks {
 		public AnimationCurve Curve;
 	}
 
-	public enum MoveMode {
+	public enum EMoveMode {
 
 		Speed,
 		Force
@@ -78,15 +94,15 @@ namespace Sand.Combat.Attacks {
 	[Serializable]
 	public class MovingData {
 
-		public MoveMode MoveMode;
+		public EMoveMode MoveMode;
 
-		[ShowIf ("MoveMode", MoveMode.Speed)]
+		[ShowIf ("MoveMode", EMoveMode.Speed)]
 		public float Speed;
-		[ShowIf ("MoveMode", MoveMode.Force)]
+		[ShowIf ("MoveMode", EMoveMode.Force)]
 		public Vector3 Force;
 	}
 
-	public enum ChargeMathMode {
+	public enum EChargeMathMode {
 
 		Additive,
 		Multiplicative
@@ -97,7 +113,7 @@ namespace Sand.Combat.Attacks {
 
 		public float MaxChargeTime;
 		public AnimationCurve ChargeEvaluation;
-		public ChargeMathMode ChargeMathMode;
+		public EChargeMathMode ChargeMathMode;
 
 		public float GetEvaluted(float chargedTime) {
 

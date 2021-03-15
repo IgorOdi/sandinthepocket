@@ -1,5 +1,14 @@
 ﻿namespace Sand.Combat {
 
+	public enum EWeaponElement {
+
+		None,
+		Fire,
+		Water,
+		Lightning,
+		Ice,
+	}
+
 	public enum ECombatStatus {
 
 		Stagger,
@@ -8,6 +17,13 @@
 		Wet,
 		Paralyzed,
 		Frozen,
+	}
+
+	public enum EStatusLevel {
+
+		Level_01,
+		Level_02,
+		Level_03,
 	}
 
 	public enum EColliderBuildType {
@@ -21,5 +37,11 @@
 		Success,
 		Miss,
 		Blocked
+	}
+
+	public enum EComboWeaponType {
+
+		Melee,
+		Ranged
 	}
 }

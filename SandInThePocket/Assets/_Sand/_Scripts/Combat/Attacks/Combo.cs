@@ -4,25 +4,19 @@ using UnityEngine;
 
 namespace Sand.Combat.Attacks {
 
-	public enum ComboWeaponType {
-
-		Melee,
-		Ranged
-	}
-
 	[CreateAssetMenu (menuName = "Combat/Melee Combo", fileName = "New Melee Combo")]
 	public class Combo : ScriptableObject {
 
-		public ComboWeaponType ComboType;
+		public EComboWeaponType ComboType;
 
-		[ShowIf ("ComboType", ComboWeaponType.Melee)]
+		[ShowIf ("ComboType", EComboWeaponType.Melee)]
 		public List<MeleeAttackData> MeleeAttacks;
-		[ShowIf ("ComboType", ComboWeaponType.Ranged)]
+		[ShowIf ("ComboType", EComboWeaponType.Ranged)]
 		public List<RangedAttackData> RangedAttacks;
 
 		public BaseAttackData GetAttack(int index) {
 
-			if (ComboType == ComboWeaponType.Melee) {
+			if (ComboType == EComboWeaponType.Melee) {
 
 				return MeleeAttacks[index];
 			} else {

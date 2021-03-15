@@ -1,5 +1,7 @@
 ﻿using System;
 using Sand.Combat.Attacks;
+using Sand.Database;
+using UnityEngine;
 
 namespace Sand.Combat {
 
@@ -7,22 +9,22 @@ namespace Sand.Combat {
 	public class Status {
 
 		public ECombatStatus Type;
-		public float TotalDuration;
-        public float CurrentDuration;
+
+		[HideInInspector]
 		public int DamagePerSecond;
+		[HideInInspector]
+		public float CurrentDuration;
+		[HideInInspector]
+		public float Duration;
 
-		public Status(ECombatStatus type, float duration) {
+		public Status(StatusData status) {
 
-			Type = type;
-			TotalDuration = duration;
-            CurrentDuration = TotalDuration;
-		}
+			var db = Resources.Load<StatusDatabase> ("StatusDatabase");
+			var data = db.GetFromTypeAndLevel (status.CombatStatus, status.Level);
 
-		public Status(StatusData data) {
-
-			Type = data.CombatStatus;
-			TotalDuration = data.Duration;
-            CurrentDuration = TotalDuration;
+			Type = status.CombatStatus;
+			DamagePerSecond = data.DamagePerSecond;
+			CurrentDuration = data.Duration;
 		}
 	}
 }

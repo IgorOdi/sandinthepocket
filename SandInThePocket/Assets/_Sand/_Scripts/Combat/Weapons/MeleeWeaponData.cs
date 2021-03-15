@@ -8,7 +8,7 @@ namespace Sand.Combat.Weapons {
 
 		void OnValidate() {
 
-			if (Combo != null && !Combo.ComboType.Equals (ComboWeaponType.Melee)) {
+			if (Combo != null && !Combo.ComboType.Equals (EComboWeaponType.Melee)) {
 
 				Combo = null;
 				Debug.LogError("You must set the combo as Melee");
