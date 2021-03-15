@@ -70,5 +70,4 @@ MonoBehaviour:
         m_PostInfinity: 2
         m_RotationOrder: 4
       ChargeMathMode: 1
-    Visual: {fileID: 0}
     PoolOverride: 

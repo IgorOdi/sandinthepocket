@@ -171,18 +171,18 @@ namespace Sand.Combat {
 			if (killSucess) OnTickDeath (status);
 		}
 
-		public void CauseDamage(DamagerData attackData, Action<EAttackResult, CombatActor> atkResult, Action<bool, CombatActor> killed) {
+		public void CauseDamage(DamagerData damagerData, Action<EAttackResult, CombatActor> atkResult, Action<bool, CombatActor> killed) {
 
-			ActorStats.Health -= attackData.FullDamage;
+			ActorStats.Health -= damagerData.FullDamage;
 			atkResult?.Invoke (EAttackResult.Success, this);
-			OnHit (attackData, EAttackResult.Success);
+			OnHit (damagerData, EAttackResult.Success);
 
-			AddStatus (attackData.Statuses);
+			AddStatus (damagerData.Statuses);
 
 			bool killSucess = ActorStats.Health <= 0;
 
 			killed?.Invoke (killSucess, this);
-			if (killSucess) OnDeath (attackData);
+			if (killSucess) OnDeath (damagerData);
 		}
 	}
 }

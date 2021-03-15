@@ -21,7 +21,7 @@ namespace Sand.Pooling {
 		private void Awake() {
 
 			managerTransRef = transform;
-			Resources.Load<PoolSettings> ("PoolSettings").Initialize ();
+			Resources.Load<PoolDatabase> ("PoolDatabase").Initialize ();
 		}
 
 		public static bool HasPool(string poolName, out Pool pool) {
