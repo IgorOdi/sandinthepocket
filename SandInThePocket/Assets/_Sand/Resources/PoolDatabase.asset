@@ -10,6 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 957131d7a4ce21a46a6b026f3415d6a8, type: 3}
-  m_Name: PoolSettings
+  m_Name: PoolDatabase
   m_EditorClassIdentifier: 
-  PoolSettingsSets: []
+  PoolSettingsSets:
+  - PoolName: BoxDamager
+    GameObject: {fileID: 1586768746495270291, guid: ab3019e60d585824c95be9f9c5378c84, type: 3}
+    StartingCopies: 5
+  - PoolName: SphereDamager
+    GameObject: {fileID: 6925151801975829983, guid: 8c01b8b630b32c6499765165c7048a56, type: 3}
+    StartingCopies: 5
+  - PoolName: BaseProjectile
+    GameObject: {fileID: 5504972642036156231, guid: ea39a322569e1af49a4fcde8eb431c6b, type: 3}
+    StartingCopies: 5
