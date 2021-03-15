@@ -18,7 +18,11 @@ namespace Sand.Pooling {
 			SceneManager.LoadSceneAsync ("Pooling", LoadSceneMode.Additive);
 		}
 
-		void Awake() => managerTransRef = transform;
+		private void Awake() {
+
+			managerTransRef = transform;
+			Resources.Load<PoolSettings> ("PoolSettings").Initialize ();
+		}
 
 		public static bool HasPool(string poolName, out Pool pool) {
 
@@ -34,6 +38,16 @@ namespace Sand.Pooling {
 		public static Pool GetPool(string poolName) {
 
 			return pools.Where (p => p.Name.Equals (poolName)).FirstOrDefault ();
+		}
+
+		public static GameObject GetFromPool(string poolName) {
+
+			return GetPool (poolName).Get ();
+		}
+
+		public static T GetFromPool<T>(string poolName) {
+
+			return GetPool (poolName).Get<T> ();
 		}
 
 		public static Pool CreatePool(string poolName, GameObject poolObject, int count = 1) {
@@ -54,10 +68,11 @@ namespace Sand.Pooling {
 
 			var pool = new Pool (poolName);
 			pool.RootGameObject.transform.Reset (managerTransRef);
+			pools.Add (pool);
 			return pool;
 		}
 
-		public static void AddToPool(string poolName, GameObject poolObject, int count = 1) {
+		public static void AddToPool(string poolName, GameObject poolObject) {
 
 			if (!HasPool (poolName))
 				throw new Exception ("There's no pool with this name");
