@@ -17,6 +17,7 @@ namespace Sand.Combat {
 	public class CombatActor : MonoBehaviour, IDamageable {
 
 		public ActorStats ActorStats;
+		[Sirenix.OdinInspector.ReadOnly]
 		public List<Status> Statuses;
 
 		public static event Action<CombatActor> OnActorGlobalSpawn;
