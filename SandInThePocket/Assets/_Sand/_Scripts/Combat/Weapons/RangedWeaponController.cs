@@ -35,7 +35,11 @@ namespace Sand.Combat.Weapons {
 
 		public override void OnWeaponHold() {
 
-			if (!IsAttacking) return;
+			if (!IsAttacking) {
+
+				if (cooldownRunningTime <= 0) OnWeaponPress ();
+				return;
+			}
 
 			chargeTime += Time.deltaTime;
 			Debug.Log ($"Charging with {RangedWeaponData.Name}");
@@ -45,21 +49,28 @@ namespace Sand.Combat.Weapons {
 
 			if (!IsAttacking) return;
 
-			string poolOrigin = string.IsNullOrEmpty (NextAttack.PoolOverride) ? RangedWeaponData.ProjectilePool : NextAttack.PoolOverride;
-
-			RangedDamager baseProjectile = PoolManager.GetFromPool<RangedDamager> (poolOrigin);
-			ProjectileDamagerData damagerData = new ProjectileDamagerData (NextAttack, chargeTime, poolOrigin, this);
+			GameObject poolProjectileReference = NextAttack.PoolOverride == null ? RangedWeaponData.ProjectilePrefab : NextAttack.PoolOverride;
+			ProjectileDamagerData damagerData = new ProjectileDamagerData (NextAttack, chargeTime, this);
 
 			//Improviso por enquanto;
 			Vector3 shootPos = transform.position + transform.forward * 1.5f + transform.up * 0.5f;
 
-			baseProjectile.transform.Reset (null, shootPos, transform.eulerAngles);
-			baseProjectile.gameObject.MoveToCurrentScene ();
+			RangedDamager projectile;
+			string poolName;
 
-			baseProjectile.Initialize (damagerData, NextAttack.TimingData.Duration, NextAttack.MovingData);
+			bool useDefaultProjectile = poolProjectileReference == null;
+			if (useDefaultProjectile) {
+				projectile = Damager.Spawn (shootPos, transform.eulerAngles, out poolName);
+			} else {
+
+				poolName = poolProjectileReference.name;
+				projectile = Damager.SpawnSpecific (poolProjectileReference, shootPos, transform.eulerAngles);
+			}
+
+			projectile.Initialize (damagerData, poolName, NextAttack.TimingData.Duration, NextAttack.MovingData);
 			SetAttacking (false);
 
-			Debug.Log ($"Shooting with {RangedWeaponData.Name} | Held Time: {chargeTime}\nAttack Index: {comboIndex} | AttackDamage: {baseProjectile.Data.FullDamage}");
+			Debug.Log ($"Shooting with {RangedWeaponData.Name} | Held Time: {chargeTime}\nAttack Index: {comboIndex} | AttackDamage: {projectile.Data.FullDamage}");
 		}
 	}
 }

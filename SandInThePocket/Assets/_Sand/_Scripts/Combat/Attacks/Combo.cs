@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Sand.Combat.Attacks {
 
-	[CreateAssetMenu (menuName = "Combat/Melee Combo", fileName = "New Melee Combo")]
+	[CreateAssetMenu (menuName = "Combat/Combo Data", fileName = "New Combo Data")]
 	public class Combo : ScriptableObject {
 
 		public EComboWeaponType ComboType;

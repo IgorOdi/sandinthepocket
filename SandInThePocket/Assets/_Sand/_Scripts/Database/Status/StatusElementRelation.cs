@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Sand.Combat;
 
-namespace Sand.Database {
+namespace Sand.Database.Status {
 
 	public class StatusElementRelation {
 

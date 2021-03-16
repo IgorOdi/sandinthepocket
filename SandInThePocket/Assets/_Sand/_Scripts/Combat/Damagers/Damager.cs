@@ -1,7 +1,5 @@
 ﻿using System;
-using Sand.Combat.Attacks;
 using Sand.Pooling;
-using Sand.Utils;
 using UnityEngine;
 
 namespace Sand.Combat.Damaging {
@@ -9,6 +7,7 @@ namespace Sand.Combat.Damaging {
 	public abstract partial class Damager : MonoBehaviour {
 
 		public DamagerData Data { get; protected set; }
+		public string PoolOrigin { get; protected set; }
 
 		public Action OnHitEnable { get; set; }
 		public Action OnHitDisable { get; set; }
@@ -18,11 +17,10 @@ namespace Sand.Combat.Damaging {
 		protected new Collider collider;
 		protected IDamageable lastHitEnemy;
 
-		public virtual void Initialize(DamagerData data, float delay, float duration) {
+		public virtual void Initialize(DamagerData data, string poolOrigin) {
 
 			Data = data;
-			this.RunDelayed (delay, OnStart);
-			this.RunDelayed (duration, OnEnd);
+			PoolOrigin = poolOrigin;
 		}
 
 		protected virtual void OnStart() {
@@ -38,7 +36,7 @@ namespace Sand.Combat.Damaging {
 			if (lastHitEnemy == null)
 				OnHitSuccess?.Invoke (EAttackResult.Miss, null);
 
-			PoolManager.AddToPool (Data.PoolOrigin, gameObject);
+			PoolManager.AddToPool (PoolOrigin, gameObject);
 		}
 
 		protected virtual void OnTriggerEnter(Collider other) {

@@ -1,5 +1,4 @@
-﻿using Sand.Combat.Attacks;
-using Sand.Utils;
+﻿using Sand.Utils;
 using UnityEngine;
 
 namespace Sand.Combat.Damaging {
@@ -11,10 +10,13 @@ namespace Sand.Combat.Damaging {
 			collider = GetComponent<Collider> ();
 		}
 
-		public override void Initialize(DamagerData data, float delay, float duration) {
+		public void Initialize(DamagerData data, string poolOrigin, float delay, float duration) {
+
+			base.Initialize (data, poolOrigin);
 
 			collider.enabled = false;
-			base.Initialize (data, delay, duration);
+			this.RunDelayed (delay, OnStart);
+			this.RunDelayed (duration, OnEnd);
 		}
 
 		protected override void OnStart() {

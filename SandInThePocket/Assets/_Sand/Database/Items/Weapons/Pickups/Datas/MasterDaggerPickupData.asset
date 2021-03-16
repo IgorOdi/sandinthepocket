@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 253e539f7888bff44a1d11e6d4785010, type: 3}
-  m_Name: MasterBowPickupData
+  m_Name: MasterDaggerPickupData
   m_EditorClassIdentifier: 
-  PickupVisual: {fileID: 4136490879141758116, guid: ba8bf168a130f5545a3c6d38af253605, type: 3}
-  WeaponPrefab: {fileID: 4280064266056776673, guid: d57ae465b31f6154eb7950a7d398ddf9, type: 3}
+  PickupPrefab: {fileID: 7438320872033618384, guid: 4931392db14b1f342b6e077d2985dcb5, type: 3}
+  ControllerPrefab: {fileID: 5989407691871408966, guid: 49cea6bb08402354197aabce890b825a, type: 3}

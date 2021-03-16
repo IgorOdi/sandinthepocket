@@ -29,11 +29,10 @@ namespace Sand.Combat.Weapons {
 
 			this.RunDelayed (NextAttack.TimingData.TotalDuration, () => SetAttacking (false));
 
-			string poolOrigin = Damager.GetColliderTypeString (NextAttack.ColliderBuildData.ColliderBuildType);
-			MeleeDamagerData damagerData = new MeleeDamagerData (NextAttack, poolOrigin, this);
+			MeleeDamagerData damagerData = new MeleeDamagerData (NextAttack, this);
 
-			Damager damager = Damager.Spawn (NextAttack.ColliderBuildData, transform);
-			damager.Initialize (damagerData, NextAttack.TimingData.Delay, NextAttack.TimingData.Duration);
+			MeleeDamager damager = Damager.Spawn (NextAttack.ColliderBuildData, transform, out string poolOrigin);
+			damager.Initialize (damagerData, poolOrigin, NextAttack.TimingData.Delay, NextAttack.TimingData.Duration);
 
 			IncreaseComboIndex ();
 

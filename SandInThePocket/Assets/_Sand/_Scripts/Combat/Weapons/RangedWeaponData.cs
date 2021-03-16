@@ -6,7 +6,7 @@ namespace Sand.Combat.Weapons {
 	[CreateAssetMenu (menuName = "Combat/Ranged Weapon Data", fileName = "New Ranged Weapon Data")]
 	public class RangedWeaponData : BaseWeaponData {
 
-		public string ProjectilePool;
+		public GameObject ProjectilePrefab;
 
 		void OnValidate() {
 

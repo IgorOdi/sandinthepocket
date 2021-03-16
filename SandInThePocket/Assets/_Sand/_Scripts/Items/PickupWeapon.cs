@@ -3,11 +3,13 @@ using Sand.Player;
 
 namespace Sand.Items {
 
-	public class PickupWeapon : PickupItem {
+	public class PickupWeapon : PickupItem<PickupWeaponData> {
+
+		protected override bool CollectOnCollide => false;
 
 		public override void OnGetItem(PlayerCombatActor combatActor) {
 
-			var weapon = Instantiate (((PickupWeaponData) PickupData).WeaponPrefab);
+			var weapon = Instantiate (PickupData.ControllerPrefab);
 
 			BaseWeaponController controller = weapon.GetComponent<BaseWeaponController> ();
 			controller.DropObject = PickupData.PickupPrefab;

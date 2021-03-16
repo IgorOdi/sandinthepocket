@@ -13,16 +13,19 @@ namespace Sand.Pooling {
 		public Queue<GameObject> PooledObjects { get; set; }
 		public GameObject RootGameObject;
 
+		private GameObject reference;
+
 		public Pool(string name, GameObject poolObject, int count = 1) {
 
 			Name = name;
 			PooledObjects = new Queue<GameObject> ();
 			RootGameObject = new GameObject (Name);
+			reference = poolObject;
 
 			GameObject newCopy;
 			for (int i = 0; i < count; i++) {
 
-				newCopy = GameObject.Instantiate (poolObject);
+				newCopy = GameObject.Instantiate (reference);
 				newCopy.transform.Reset (RootGameObject.transform, false);
 				PooledObjects.Enqueue (newCopy);
 			}
@@ -43,8 +46,20 @@ namespace Sand.Pooling {
 
 		public GameObject Get(Action onFail) {
 
-			if (PooledObjects.Count <= 0)
+			if (PooledObjects.Count <= 0) {
+
 				onFail?.Invoke ();
+			}
+
+			return Get ();
+		}
+
+		public GameObject Get(bool failProof) {
+
+			if (PooledObjects.Count <= 0 && failProof) {
+
+				Add (GameObject.Instantiate (reference));
+			}
 
 			return Get ();
 		}
