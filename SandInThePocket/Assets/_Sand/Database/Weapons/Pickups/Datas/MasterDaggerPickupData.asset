@@ -1,0 +1,16 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 253e539f7888bff44a1d11e6d4785010, type: 3}
+  m_Name: MasterSwordPickupData
+  m_EditorClassIdentifier: 
+  PickupVisual: {fileID: 4136490879141758116, guid: ba8bf168a130f5545a3c6d38af253605, type: 3}
+  WeaponPrefab: {fileID: 4280064266056776673, guid: d57ae465b31f6154eb7950a7d398ddf9, type: 3}
