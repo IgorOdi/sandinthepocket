@@ -14,10 +14,9 @@ namespace Sand.Combat.Damaging {
 			rigidbody = GetComponent<Rigidbody> ();
 		}
 
-		public void Initialize(DamagerData data, float duration, MovingData movingData) {
+		public void Initialize(DamagerData data, string poolOrigin, float duration, MovingData movingData) {
 
-			Data = data;
-			OnStart ();
+			base.Initialize (data, poolOrigin);
 			this.RunDelayed (duration, OnEnd);
 
 			if (movingData.MoveMode == EMoveMode.Speed) {

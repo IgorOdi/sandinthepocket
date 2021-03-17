@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 957131d7a4ce21a46a6b026f3415d6a8, type: 3}
   m_Name: PoolDatabase
   m_EditorClassIdentifier: 
-  PoolSettingsSets:
+  PoolSettings:
   - PoolName: BoxDamager
     GameObject: {fileID: 1586768746495270291, guid: ab3019e60d585824c95be9f9c5378c84, type: 3}
     StartingCopies: 5

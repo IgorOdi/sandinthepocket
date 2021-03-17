@@ -5,9 +5,10 @@ using UnityEngine;
 namespace Sand.Items {
 
 	[RequireComponent (typeof (Collider))]
-	public class PickupItem : MonoBehaviour {
+	public abstract class PickupItem<T> : MonoBehaviour where T : PickupItemData {
 
-		public PickupItemData PickupData;
+		public T PickupData;
+		protected virtual bool CollectOnCollide { get; set; } = true;
 		private PlayerCombatActor onTriggerPlayer;
 
 		public virtual void OnGetItem(PlayerCombatActor combatActor) { }
@@ -24,6 +25,11 @@ namespace Sand.Items {
 		public void OnTriggerEnter(Collider other) {
 
 			other.TryGetComponent<PlayerCombatActor> (out onTriggerPlayer);
+
+			if (CollectOnCollide && onTriggerPlayer != null) {
+
+				OnGetItem (onTriggerPlayer);
+			}
 		}
 
 		public void OnTriggerExit(Collider other) {

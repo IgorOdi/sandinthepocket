@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Sand.Database;
+using Sand.Database.Status;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -151,6 +151,6 @@ namespace Sand.Combat.Attacks {
 
 		public MovingData MovingData;
 		public ChargeData ChargeData;
-		public string PoolOverride;
+		public GameObject PoolOverride;
 	}
 }

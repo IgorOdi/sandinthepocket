@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Sand.Player {
 
-	public class PlayerCombatActor : CombatActor {
+	public partial class PlayerCombatActor : CombatActor {
 
 		[SerializeField, ReadOnly]
 		private BaseWeaponController[] weaponControllers = new BaseWeaponController[2];
@@ -18,7 +18,7 @@ namespace Sand.Player {
 
 			weaponController.transform.Reset (transform);
 			weaponControllers[currentWeaponIndex] = weaponController;
-			weaponControllers[currentWeaponIndex].OnCollect(this);
+			weaponControllers[currentWeaponIndex].OnCollect (this);
 			weaponControllers[currentWeaponIndex].OnEquip ();
 		}
 
@@ -42,6 +42,14 @@ namespace Sand.Player {
 		}
 
 		protected override void Update() {
+
+			if (Input.GetKeyDown (KeyCode.L)) {
+
+				for (int i = 0; i < keys.Count; i++) {
+					
+					Debug.Log (keys[i]);
+				}
+			}
 
 			base.Update ();
 

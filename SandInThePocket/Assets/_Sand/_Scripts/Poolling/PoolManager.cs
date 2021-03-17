@@ -50,6 +50,28 @@ namespace Sand.Pooling {
 			return GetPool (poolName).Get<T> ();
 		}
 
+		public static GameObject GetFromOrCreatePool(GameObject reference) {
+
+			GameObject pooledObject;
+			if (!HasPool (reference.name)) {
+
+				CreatePool (reference.name, reference);
+				pooledObject = GetFromPool (reference.name);
+				Debug.Log (pooledObject);
+			} else {
+
+				Pool pool = GetPool (reference.name);
+				pooledObject = pool.Get (true);
+			}
+
+			return pooledObject;
+		}
+
+		public static T GetFromOrCreatePool<T>(GameObject reference) {
+
+			return GetFromOrCreatePool (reference).GetComponent<T> ();
+		}
+
 		public static Pool CreatePool(string poolName, GameObject poolObject, int count = 1) {
 
 			if (HasPool (poolName))

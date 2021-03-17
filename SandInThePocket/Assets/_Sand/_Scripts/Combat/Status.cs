@@ -1,6 +1,6 @@
 ﻿using System;
 using Sand.Combat.Attacks;
-using Sand.Database;
+using Sand.Database.Status;
 using UnityEngine;
 
 namespace Sand.Combat {

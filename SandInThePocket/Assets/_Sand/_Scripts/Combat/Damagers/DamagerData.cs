@@ -12,11 +12,10 @@ namespace Sand.Combat.Damaging {
 		public readonly List<StatusData> Statuses;
 		public readonly ScreenShakeData ScreenShakeData;
 
-		public string PoolOrigin;
 		public virtual BaseWeaponController Context { get; set; }
 		public virtual CombatActor User => Context.Context;
 
-		public DamagerData(BaseAttackData attackData, string poolOrigin, BaseWeaponController context) {
+		public DamagerData(BaseAttackData attackData, BaseWeaponController context) {
 
 			Context = context;
 
@@ -24,7 +23,6 @@ namespace Sand.Combat.Damaging {
 			ImpactForce = attackData.ImpactData.ImpactForce;
 			Statuses = ConfigureStatuses (attackData.DamageData.StatusData, context.WeaponData);
 			ScreenShakeData = attackData.ScreenShakeData;
-			PoolOrigin = poolOrigin;
 		}
 
 		public List<StatusData> ConfigureStatuses(List<StatusData> statuses, BaseWeaponData weaponData) {
@@ -44,8 +42,8 @@ namespace Sand.Combat.Damaging {
 
 	public class MeleeDamagerData : DamagerData {
 
-		public MeleeDamagerData(MeleeAttackData attackData, string poolOrigin, MeleeWeaponController context) :
-			base (attackData, poolOrigin, context) {
+		public MeleeDamagerData(MeleeAttackData attackData, MeleeWeaponController context) :
+			base (attackData, context) {
 
 			FullDamage = attackData.DamageData.GetFullDamage (Context.WeaponData.BaseDamage);
 		}
@@ -53,8 +51,8 @@ namespace Sand.Combat.Damaging {
 
 	public class ProjectileDamagerData : DamagerData {
 
-		public ProjectileDamagerData(RangedAttackData attackData, float chargeTime, string poolOrigin, RangedWeaponController context) :
-			base (attackData, poolOrigin, context) {
+		public ProjectileDamagerData(RangedAttackData attackData, float chargeTime, RangedWeaponController context) :
+			base (attackData, context) {
 
 			if (attackData.ChargeData.ChargeMathMode == EChargeMathMode.Multiplicative) {
 
