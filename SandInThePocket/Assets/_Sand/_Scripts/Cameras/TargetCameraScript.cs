@@ -1,10 +1,10 @@
 ﻿using UnityEngine;
 using DG.Tweening;
 using Sand.Utils;
+using Sirenix.OdinInspector;
 
 namespace Sand.Cameras {
 
-	[RequireComponent (typeof (Camera))]
 	public class TargetCameraScript : MonoBehaviour {
 
 		[SerializeField]
@@ -12,11 +12,14 @@ namespace Sand.Cameras {
 		private Transform followFocus;
 		private bool isTweening;
 
+		[SerializeField]
+		private new Transform camera;
+
 		[SerializeField, Range (1f, 20f)]
 		private float offset = 15f;
 
 		[SerializeField, Range (0f, 90f)]
-		private float startAngle = 45f;
+		private float startAngle = 60f;
 
 		[SerializeField, Min (0f)]
 		private float focusRadius = 1f;
@@ -66,6 +69,10 @@ namespace Sand.Cameras {
 		public Tween FocusOnPlayer(float tweenTime = 0, Ease easing = Ease.Linear) {
 
 			return ChangePosition (player, tweenTime, easing);
+		}
+
+		public void shake (float duration ,float strength,int frequency, bool fadeOut ) {
+			camera.DOShakePosition(duration: duration, strength: strength, vibrato:frequency, fadeOut: fadeOut);
 		}
 
 		private void UpdateFocusPoint() {
