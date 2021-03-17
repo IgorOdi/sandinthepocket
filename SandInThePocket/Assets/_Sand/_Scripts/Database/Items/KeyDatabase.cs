@@ -4,5 +4,8 @@ using UnityEngine;
 namespace Sand.Database.Items {
 
 	[CreateAssetMenu (menuName = "Database/Key", fileName = "KeyDatabase")]
-	public class KeyDatabase : Database<PickupKeyData> { }
+	public class KeyDatabase : Database<PickupKeyData> { 
+
+		protected override string findTypeName => "pickupkeydata";
+	}
 }
